@@ -10,6 +10,7 @@ import com.iqspark.underwriter.llm.LlmReasoningException;
 import com.iqspark.underwriter.llm.TemplateLlmReasoner;
 import com.iqspark.underwriter.metrics.DecisionMetrics;
 import com.iqspark.underwriter.persistence.DecisionStore;
+import com.iqspark.underwriter.security.pii.PiiRedactor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -177,10 +178,14 @@ public class DecisionOrchestrator {
             return;
         }
         try {
-            decisionStore.save(decision, submission.effectiveLine().name());
+            double coverage = submission.requestedCoverage() != null
+                    ? submission.requestedCoverage().amount() : 0.0;
+            decisionStore.save(decision, submission.effectiveLine().name(), coverage);
         } catch (Exception e) {
             // Degrade-to-floor: a persistence failure never fails the decision response.
-            log.warn("Failed to persist decision {}: {}", decision.reference(), e.getMessage());
+            // Messages are PII-redacted before logging.
+            log.warn("Failed to persist decision {}: {}",
+                    decision.reference(), PiiRedactor.redact(e.getMessage()));
         }
     }
 

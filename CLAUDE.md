@@ -8,8 +8,10 @@ Phase 0 decision core is implemented in `src/main/java/com/iqspark/underwriter` 
 Boot 3.3): config-driven rules engine (rules as YAML under `src/main/resources/rules/`), case-based
 k-NN learning over a deterministic synthetic book, geo remoteness screen, indicative pricing,
 template + Anthropic reasoners, REST API, JPA/H2 persistence with a hash-chained audit trail,
-Micrometer metrics, and JUnit 5 tests. Three lines are wired: vacant home (reference), rental,
-contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
+Micrometer metrics, and JUnit 5 tests. Phase 1 baseline security is in place (Spring Security:
+dual-mode authN — HTTP Basic offline / OIDC-JWT when `issuer-uri` is set — RBAC, underwriting
+authority limits + four-eyes binding, and PII redaction). Three lines are wired: vacant home
+(reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.
 

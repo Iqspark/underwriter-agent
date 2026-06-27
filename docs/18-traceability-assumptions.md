@@ -47,7 +47,7 @@ progresses. Status: **Built** = implemented (Phase 0); **Designed** = specified,
 | NFR-6 | Testability | [doc 15](15-testing-evaluation-quality.md) | 0015 | Built (core) / Designed (eval harness) |
 | NFR-7 | Extensibility behind seams | [doc 2](02-architecture-design.md), [doc 9](09-multi-line-architecture.md) | 0004, 0009 | Built (rules/agents) / Designed (LOB) |
 | NFR-8 | Portability (Java 21 + Spring Boot) | [doc 4](04-operations-runbook.md) | 0005 | Built |
-| NFR-9 / 9a–9d | Security, authZ, PII, AI-security, compliance | [doc 11](11-security-privacy.md) | 0011 | Designed |
+| NFR-9 / 9a–9d | Security, authZ, PII, AI-security, compliance | [doc 11](11-security-privacy.md) | 0011, 0024 | Built (baseline: dual-mode authN, RBAC, authority limits/four-eyes, PII redaction); AI-specific + full hardening Designed |
 | NFR-10 | Observability | [doc 10](10-runtime-audit-observability.md) | 0010 | Designed (basic logging Built) |
 | NFR-11 | Resilience / DR | [doc 12](12-resilience-dr.md) | 0012 | Designed |
 | NFR-12 | Model governance | [doc 13](13-ai-governance-model-risk.md) | 0013 | Designed |

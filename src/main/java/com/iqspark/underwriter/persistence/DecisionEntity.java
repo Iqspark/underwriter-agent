@@ -24,6 +24,7 @@ public class DecisionEntity {
     private String line;
     private String outcome;
     private int riskScore;
+    private double coverageAmount;
     private double premiumAmount;
     private String premiumCurrency;
 
@@ -57,6 +58,8 @@ public class DecisionEntity {
     public void setOutcome(String outcome) { this.outcome = outcome; }
     public int getRiskScore() { return riskScore; }
     public void setRiskScore(int riskScore) { this.riskScore = riskScore; }
+    public double getCoverageAmount() { return coverageAmount; }
+    public void setCoverageAmount(double coverageAmount) { this.coverageAmount = coverageAmount; }
     public double getPremiumAmount() { return premiumAmount; }
     public void setPremiumAmount(double premiumAmount) { this.premiumAmount = premiumAmount; }
     public String getPremiumCurrency() { return premiumCurrency; }

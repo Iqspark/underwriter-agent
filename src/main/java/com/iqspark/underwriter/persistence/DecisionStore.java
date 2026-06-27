@@ -36,12 +36,13 @@ public class DecisionStore {
     }
 
     @Transactional
-    public void save(Decision decision, String line) {
+    public void save(Decision decision, String line, double coverageAmount) {
         DecisionEntity e = new DecisionEntity();
         e.setReference(decision.reference());
         e.setLine(line);
         e.setOutcome(decision.outcome().name());
         e.setRiskScore(decision.riskScore());
+        e.setCoverageAmount(coverageAmount);
         if (decision.indicativePremium() != null) {
             e.setPremiumAmount(decision.indicativePremium().amount());
             e.setPremiumCurrency(decision.indicativePremium().currency());
@@ -75,7 +76,8 @@ public class DecisionStore {
             Money premium = e.getPremiumCurrency() == null ? null
                     : new Money(e.getPremiumAmount(), e.getPremiumCurrency());
             return new StoredDecision(
-                    e.getReference(), e.getLine(), e.getOutcome(), e.getRiskScore(), premium,
+                    e.getReference(), e.getLine(), e.getOutcome(), e.getRiskScore(),
+                    e.getCoverageAmount(), premium,
                     e.getRationale(),
                     fromJson(e.getFindingsJson(), new TypeReference<List<Finding>>() {}),
                     fromJson(e.getConditionsJson(), new TypeReference<List<String>>() {}),

@@ -13,6 +13,7 @@ public record StoredDecision(
         String line,
         String outcome,
         int riskScore,
+        double coverageAmount,
         Money indicativePremium,
         String rationale,
         List<Finding> findings,

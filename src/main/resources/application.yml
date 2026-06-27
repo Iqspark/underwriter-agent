@@ -55,6 +55,18 @@ underwriter:
       # (Spring relaxed binding maps that env var to underwriter.llm.anthropic.api-key.)
       model: claude-sonnet-4-6
 
+  # Baseline security (Phase 1). Offline default = HTTP Basic with in-memory role users.
+  # To switch to production OIDC resource-server mode, set
+  # spring.security.oauth2.resourceserver.jwt.issuer-uri (see the prod profile below).
+  security:
+    dev-password: ${UNDERWRITER_DEV_PASSWORD:changeit}   # dev/offline Basic-auth users only
+
+  # Underwriting authority limits + four-eyes (owned by UW leadership; defaults are illustrative).
+  authority:
+    underwriter-limit: 1000000
+    senior-limit: 10000000
+    four-eyes-threshold: 5000000
+
 logging:
   level:
     com.iqspark.underwriter: INFO
@@ -72,3 +84,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate    # production schema is managed by migrations, not auto-ddl
+  # Enable OIDC resource-server mode in production by setting the issuer-uri (then HTTP Basic is off):
+  # security:
+  #   oauth2:
+  #     resourceserver:
+  #       jwt:
+  #         issuer-uri: ${OIDC_ISSUER_URI:}

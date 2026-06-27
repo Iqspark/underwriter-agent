@@ -84,8 +84,10 @@ flowchart TB
 - **Built since:** config-driven rules ([ADR-0018](adr/0018-config-driven-rules.md)); **three lines** —
   vacant home, rental, contents — via the LOB plug-in model ([doc 9](09-multi-line-architecture.md));
   **Phase 1** persistence + tamper-evident audit (JPA, H2 dev / Postgres prod) + baseline metrics
-  (Actuator/Micrometer) ([ADR-0019](adr/0019-phase1-persistence-metrics.md)).
-- **Designed / next:** Phase 1 **baseline security** (OIDC/RBAC, next slice) → RAG → event runtime →
+  (Actuator/Micrometer) ([ADR-0019](adr/0019-phase1-persistence-metrics.md)); **Phase 1 baseline
+  security** — dual-mode authN (HTTP Basic offline / OIDC-JWT in prod), RBAC, underwriting authority
+  limits + four-eyes, and PII redaction ([ADR-0024](adr/0024-phase1-baseline-security.md)).
+- **Designed / next:** RAG → event runtime →
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
   governance, cost) threaded through.
@@ -104,5 +106,5 @@ flowchart TB
 `0` overview · `1` BRD · `2` HLD · `3` API · `4` runbook · `5` learning · `6` RAG · `7` target ·
 `8` **recommended solution** · `9` multi-line · `10` runtime/audit · `11` security/PII ·
 `12` resilience/DR · `13` governance/model-risk · `14` cost · `15` testing/eval ·
-`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0023](adr/) and
+`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0024](adr/) and
 [diagrams](diagrams/).

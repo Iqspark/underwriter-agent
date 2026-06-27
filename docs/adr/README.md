@@ -28,3 +28,4 @@ Format is lightweight (after Michael Nygard). Status values: Proposed, Accepted,
 | [0021](0021-semantic-feature-extraction.md) | Semantic feature extraction from unstructured documents | Proposed |
 | [0022](0022-reviewer-agent.md) | Reviewer agent — the LLM "skeptical underwriter" (evaluator, formalized) | Proposed |
 | [0023](0023-knn-scalability-ann.md) | k-NN scalability — ANN index over pgvector | Proposed |
+| [0024](0024-phase1-baseline-security.md) | Phase 1 — baseline security (dual-mode auth, RBAC, authority limits, PII redaction) | Accepted |
