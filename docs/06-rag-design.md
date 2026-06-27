@@ -1,7 +1,7 @@
 # 6. RAG Pipeline Design (Spring AI)
 
 **Project:** AI Underwriter Agent
-**Document status:** Proposed (design-first; build to follow)
+**Document status:** Baseline thin slice **built** (flag-gated `underwriter.rag.enabled`) — see [ADR-0007](adr/0007-rag-spring-ai.md)
 **Audience:** Engineers, data, underwriting
 **Related:** [ADR-0007](adr/0007-rag-spring-ai.md), [doc 5 — AI-First Learning](05-ai-learning-design.md), [HLD](02-architecture-design.md)
 

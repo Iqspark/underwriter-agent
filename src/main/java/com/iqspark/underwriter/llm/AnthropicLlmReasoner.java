@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iqspark.underwriter.domain.decision.DecisionOutcome;
 import com.iqspark.underwriter.domain.decision.Finding;
+import com.iqspark.underwriter.domain.decision.RetrievedSource;
 import com.iqspark.underwriter.domain.model.Money;
 import com.iqspark.underwriter.domain.model.Submission;
 import com.iqspark.underwriter.history.model.LearnedAssessment;
+import com.iqspark.underwriter.rag.RagDisabledCondition;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +32,7 @@ import java.util.Map;
 @Component
 @Primary
 @ConditionalOnProperty(prefix = "underwriter.llm.anthropic", name = "api-key")
+@Conditional(RagDisabledCondition.class) // RagLlmReasoner is primary when RAG is enabled
 public class AnthropicLlmReasoner implements LlmReasoner {
 
     private static final String ENDPOINT = "https://api.anthropic.com/v1/messages";
@@ -54,7 +58,8 @@ public class AnthropicLlmReasoner implements LlmReasoner {
 
     @Override
     public String summarize(Submission submission, DecisionOutcome outcome, List<Finding> findings,
-                            LearnedAssessment learned, Money premium) {
+                            LearnedAssessment learned, Money premium,
+                            List<RetrievedSource> retrievedSources) {
         try {
             String prompt = buildPrompt(submission, outcome, findings, learned, premium);
             Map<String, Object> body = Map.of(

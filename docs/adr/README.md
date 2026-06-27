@@ -11,7 +11,7 @@ Format is lightweight (after Michael Nygard). Status values: Proposed, Accepted,
 | [0004](0004-rule-autodiscovery.md) | Rule auto-discovery via Spring components | Accepted |
 | [0005](0005-java-spring-boot.md) | Java 21 + Spring Boot, JDK HttpClient for LLM | Accepted |
 | [0006](0006-case-based-learning.md) | AI-first, case-based learning from the historical book | Accepted |
-| [0007](0007-rag-spring-ai.md) | RAG via Spring AI (advisory, offline-first) | Proposed |
+| [0007](0007-rag-spring-ai.md) | RAG via Spring AI (advisory, offline-first) | Accepted (baseline built) |
 | [0008](0008-ai-maximized-architecture.md) | AI-maximized, human-augmenting target architecture | Proposed |
 | [0009](0009-line-of-business-plugin.md) | Line-of-Business plug-in architecture (multi-line) | Proposed |
 | [0010](0010-event-driven-runtime.md) | Event-driven runtime, durable audit & observability | Proposed |

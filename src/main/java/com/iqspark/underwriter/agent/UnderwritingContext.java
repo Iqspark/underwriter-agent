@@ -2,6 +2,7 @@ package com.iqspark.underwriter.agent;
 
 import com.iqspark.underwriter.domain.audit.AuditTrail;
 import com.iqspark.underwriter.domain.decision.Finding;
+import com.iqspark.underwriter.domain.decision.RetrievedSource;
 import com.iqspark.underwriter.domain.model.Money;
 import com.iqspark.underwriter.domain.model.Submission;
 import com.iqspark.underwriter.history.model.LearnedAssessment;
@@ -20,6 +21,7 @@ public class UnderwritingContext {
     private final AuditTrail auditTrail = new AuditTrail();
     private LearnedAssessment learnedAssessment;
     private Money indicativePremium;
+    private List<RetrievedSource> retrievedSources = List.of();
 
     public UnderwritingContext(Submission submission) {
         this.submission = submission;
@@ -72,6 +74,14 @@ public class UnderwritingContext {
 
     public void setIndicativePremium(Money indicativePremium) {
         this.indicativePremium = indicativePremium;
+    }
+
+    public List<RetrievedSource> retrievedSources() {
+        return retrievedSources;
+    }
+
+    public void setRetrievedSources(List<RetrievedSource> retrievedSources) {
+        this.retrievedSources = retrievedSources == null ? List.of() : List.copyOf(retrievedSources);
     }
 
     public void audit(String agent, String detail) {

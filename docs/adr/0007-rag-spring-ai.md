@@ -1,7 +1,16 @@
 # ADR-0007: RAG via Spring AI (advisory, offline-first)
 
-**Status:** Proposed
-**Date:** 2026-06-19
+**Status:** Accepted (baseline thin slice built — Phase 2 Stage A/B)
+**Date:** 2026-06-19 (accepted 2026-06-26)
+
+> **Build note (2026-06-26):** implemented behind `underwriter.rag.enabled` (default off) in
+> `com.iqspark.underwriter.rag`: corpus (`GuidelineLibrary`, `PolicyCardWriter`, `DecisionNoteLibrary`),
+> `KnowledgeIngestionService`, `UnderwritingRetriever`, `RagAssessmentAgent` (order 26, advisory
+> capped-severity finding), `RagLlmReasoner` (`@Primary` when RAG on; cited rationale, offline
+> fallback), and `RetrievedSource` on the `Decision`. Embeddings are in-process ONNX; the vector
+> store is in-memory `SimpleVectorStore` by default with **pgvector** behind the `pgvector` Maven
+> profile. RAG logic is unit-tested with mocks (offline); enabling the flag at runtime downloads the
+> ONNX model once. Spring AI version is pinned via `spring-ai.version` and may need a local adjustment.
 **Related:** [ADR-0001](0001-rules-decide-llm-explains.md), [ADR-0003](0003-pluggable-llm-offline-default.md), [ADR-0006](0006-case-based-learning.md), [doc 6](../06-rag-design.md)
 
 ## Context

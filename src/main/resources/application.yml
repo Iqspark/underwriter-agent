@@ -18,6 +18,15 @@ spring:
     properties:
       hibernate.format_sql: false
 
+  # Spring AI model auto-config is active by default (matchIfMissing=true) and eagerly builds the
+  # Anthropic API / transformers embedding at startup — which fails with no key / needs a download.
+  # Disable it by default; RagConfig supplies the embedding + vector store when RAG is enabled.
+  # To use Claude generation in RAG, set chat: anthropic and spring.ai.anthropic.api-key.
+  ai:
+    model:
+      chat: none
+      embedding: none
+
 # Actuator: expose health, metrics and the Prometheus scrape endpoint (baseline observability).
 management:
   endpoints:
@@ -66,6 +75,28 @@ underwriter:
     underwriter-limit: 1000000
     senior-limit: 10000000
     four-eyes-threshold: 5000000
+
+  # RAG grounding (Phase 2). Disabled by default so the app runs offline with no model download.
+  # When true: ingests the corpus into a vector store (in-memory by default; pgvector via the
+  # 'pgvector' Maven profile) using in-process ONNX embeddings, retrieves grounding per submission,
+  # adds an advisory finding (capped severity, never KNOCKOUT), and writes a cited rationale.
+  rag:
+    enabled: false
+    top-k: 4              # chunks retrieved per query (broadened across source types)
+    min-score: 0.6        # drop weak matches
+    max-severity: MEDIUM  # cap on the advisory RAG finding
+
+# Spring AI (used only when underwriter.rag.enabled=true). Set the Anthropic key to enable the
+# grounded LLM rationale; otherwise RAG still grounds + cites offline via the template reasoner.
+# spring:
+#   ai:
+#     anthropic:
+#       api-key: ${UNDERWRITER_LLM_ANTHROPIC_API_KEY:}
+#     vectorstore:
+#       pgvector:                 # only with the 'pgvector' Maven profile + a Postgres with 'vector'
+#         initialize-schema: true
+#         dimensions: 384
+#         index-type: HNSW
 
 logging:
   level:

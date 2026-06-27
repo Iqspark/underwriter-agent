@@ -2,6 +2,7 @@ package com.iqspark.underwriter.llm;
 
 import com.iqspark.underwriter.domain.decision.DecisionOutcome;
 import com.iqspark.underwriter.domain.decision.Finding;
+import com.iqspark.underwriter.domain.decision.RetrievedSource;
 import com.iqspark.underwriter.domain.model.Money;
 import com.iqspark.underwriter.domain.model.Submission;
 import com.iqspark.underwriter.history.model.LearnedAssessment;
@@ -28,5 +29,6 @@ public interface LlmReasoner {
                      DecisionOutcome outcome,
                      List<Finding> findings,
                      LearnedAssessment learned,
-                     Money premium);
+                     Money premium,
+                     List<RetrievedSource> retrievedSources);
 }

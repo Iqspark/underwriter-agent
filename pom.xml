@@ -23,7 +23,22 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tika.version>2.9.1</tika.version>
+        <!-- Pin to the Spring AI release available to you. GA 1.0.x is on Maven Central; for a
+             pre-release (e.g. 1.0.0-M6) add the Spring milestones repo (see <repositories> note). -->
+        <spring-ai.version>1.0.0</spring-ai.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -43,6 +58,25 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+
+        <!-- Phase 2: RAG grounding (Spring AI). Embeddings + ChatClient are instantiated only when
+             underwriter.rag.enabled=true, so the default build needs no network. pgvector is added
+             via the 'pgvector' Maven profile below; the default vector store is in-memory. -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-anthropic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-transformers</artifactId>
+        </dependency>
+        <!-- VectorStore / SimpleVectorStore / SearchRequest (org.springframework.ai.vectorstore);
+             also pulls spring-ai-commons (Document, TokenTextSplitter). Not transitive from the
+             model starters above. -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-vector-store</artifactId>
         </dependency>
 
         <!-- Phase 1: persistence (JPA) + durable audit -->
@@ -111,4 +145,26 @@
         </plugins>
     </build>
 
+    <profiles>
+        <!-- Activate with -Ppgvector (and the 'prod' Spring profile) to use a Postgres+pgvector
+             vector store instead of the default in-memory SimpleVectorStore. Requires a running
+             Postgres with the 'vector' extension. -->
+        <profile>
+            <id>pgvector</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.ai</groupId>
+                    <artifactId>spring-ai-starter-vector-store-pgvector</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <!--
+      Note: if you pin spring-ai.version to a pre-release (…-M*/…-RC*), add the Spring milestones repo:
+      <repositories>
+        <repository><id>spring-milestones</id><url>https://repo.spring.io/milestone</url>
+          <snapshots><enabled>false</enabled></snapshots></repository>
+      </repositories>
+    -->
 </project>

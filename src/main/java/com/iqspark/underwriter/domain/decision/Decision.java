@@ -20,6 +20,7 @@ public record Decision(
         Money indicativePremium,
         String rationale,
         LearnedAssessment learnedAssessment,
+        List<RetrievedSource> retrievedSources,
         List<String> auditTrail,
         Instant decidedAt
 ) {}

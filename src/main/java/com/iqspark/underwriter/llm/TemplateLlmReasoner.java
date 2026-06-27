@@ -2,6 +2,7 @@ package com.iqspark.underwriter.llm;
 
 import com.iqspark.underwriter.domain.decision.DecisionOutcome;
 import com.iqspark.underwriter.domain.decision.Finding;
+import com.iqspark.underwriter.domain.decision.RetrievedSource;
 import com.iqspark.underwriter.domain.decision.Severity;
 import com.iqspark.underwriter.domain.model.Money;
 import com.iqspark.underwriter.domain.model.Submission;
@@ -26,7 +27,8 @@ public class TemplateLlmReasoner implements LlmReasoner {
 
     @Override
     public String summarize(Submission submission, DecisionOutcome outcome, List<Finding> findings,
-                            LearnedAssessment learned, Money premium) {
+                            LearnedAssessment learned, Money premium,
+                            List<RetrievedSource> retrievedSources) {
         StringBuilder sb = new StringBuilder();
         sb.append("Recommended action: ").append(outcome).append(". ");
 
@@ -67,6 +69,12 @@ public class TemplateLlmReasoner implements LlmReasoner {
         if (premium != null) {
             sb.append("Indicative premium: ").append(premium.currency()).append(" ")
                     .append(twoDp(premium.amount())).append(". ");
+        }
+
+        if (retrievedSources != null && !retrievedSources.isEmpty()) {
+            String ids = retrievedSources.stream().map(RetrievedSource::sourceId)
+                    .distinct().limit(6).collect(Collectors.joining(", "));
+            sb.append("Grounded in sources: ").append(ids).append(". ");
         }
 
         sb.append(guidance(outcome));

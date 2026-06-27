@@ -87,7 +87,10 @@ flowchart TB
   (Actuator/Micrometer) ([ADR-0019](adr/0019-phase1-persistence-metrics.md)); **Phase 1 baseline
   security** — dual-mode authN (HTTP Basic offline / OIDC-JWT in prod), RBAC, underwriting authority
   limits + four-eyes, and PII redaction ([ADR-0024](adr/0024-phase1-baseline-security.md)).
-- **Designed / next:** RAG → event runtime →
+- **Built since (Phase 2):** **RAG grounding** baseline — corpus ingest + retrieval + advisory
+  agent + cited rationale, flag-gated `underwriter.rag.enabled`, Spring AI + in-process ONNX
+  embeddings + in-memory/pgvector store ([ADR-0007](adr/0007-rag-spring-ai.md)).
+- **Designed / next:** event runtime →
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
   governance, cost) threaded through.
