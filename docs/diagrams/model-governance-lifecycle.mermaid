@@ -1,0 +1,18 @@
+%% AI Underwriter Agent — Model / decision-logic governance lifecycle (change-management gate)
+flowchart LR
+    PROP["Propose change<br/>(rule / threshold / model / prompt / embedding)"] --> DEV["Develop<br/>(versioned, documented in model card)"]
+    DEV --> VAL["Independent validation<br/>(author != validator)"]
+
+    subgraph Gate["Approval gate (must pass ALL)"]
+        E1["Eval harness vs golden set<br/>(no regression)"]
+        E2["Fairness / bias test<br/>(no disparate impact / proxy)"]
+        E3["Groundedness & safety<br/>(LLM-as-judge)"]
+        E4["Sign-off (segregated approver +<br/>model risk / UW committee)"]
+    end
+    VAL --> Gate
+    Gate -- fail --> DEV
+    Gate -- pass --> DEPLOY["Deploy<br/>(versioned, audited, rollback ready)"]
+    DEPLOY --> MON["Monitor in production<br/>(drift, override rate, predicted vs realized loss, fairness)"]
+    MON -- drift / threshold breach --> REVIEW["Scheduled / triggered review"]
+    REVIEW --> PROP
+    REVIEW --> RETIRE["Retire / roll back"]

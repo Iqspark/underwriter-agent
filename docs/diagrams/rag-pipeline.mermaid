@@ -1,0 +1,38 @@
+%% AI Underwriter Agent — RAG pipeline (Spring AI, advisory; guardrails veto)
+flowchart TB
+    subgraph Ingest["Ingestion (startup, offline)"]
+        G["GuidelineLibrary<br/>(PR0003, Supervisory Warranty, CGL, UW manual)"]
+        C["PolicyCardWriter<br/>(HistoricalPolicy -> narrative cards)"]
+        N["DecisionNoteLibrary<br/>(precedent UW notes)"]
+        DOCS["Spring AI Documents<br/>(+metadata: type, sourceId, peril, city)"]
+        SPLIT["TokenTextSplitter"]
+        EMB1["EmbeddingModel<br/>(in-process ONNX all-MiniLM)"]
+        VS[("VectorStore<br/>Postgres + pgvector")]
+        G --> DOCS
+        C --> DOCS
+        N --> DOCS
+        DOCS --> SPLIT --> EMB1 --> VS
+    end
+
+    subgraph Query["Per submission"]
+        SUB["Submission"] --> RET["UnderwritingRetriever<br/>build query + similarity search<br/>(filter by type)"]
+        EMB2["EmbeddingModel (same ONNX)"] --> RET
+        VS --> RET
+        RET --> CTX["retrieved chunks<br/>(score + sourceId)"]
+        CTX --> RAGAGENT["RagAssessmentAgent (order 26)<br/>ChatClient -> structured advisory opinion"]
+        RAGAGENT --> FIND["advisory Finding (category RAG,<br/>capped severity: can REFER, never KNOCKOUT)"]
+        RAGAGENT --> CITES["citations -> Decision.retrievedSources"]
+    end
+
+    subgraph Decide["Existing pipeline (unchanged authority)"]
+        RULES["Rules guardrails (knockouts)"]
+        KNN["SimilarityEngine (numeric k-NN)"]
+        ORCH["DecisionOrchestrator<br/>blend: most conservative; guardrails veto"]
+        RAGLLM["RagLlmReasoner<br/>grounded, cited rationale"]
+        FIND --> ORCH
+        RULES --> ORCH
+        KNN --> ORCH
+        CTX --> RAGLLM
+        ORCH --> RAGLLM
+        RAGLLM --> DEC["Decision (+ retrievedSources)"]
+    end

@@ -1,0 +1,84 @@
+package com.iqspark.underwriter.agent;
+
+import com.iqspark.underwriter.domain.audit.AuditTrail;
+import com.iqspark.underwriter.domain.decision.Finding;
+import com.iqspark.underwriter.domain.model.Money;
+import com.iqspark.underwriter.domain.model.Submission;
+import com.iqspark.underwriter.history.model.LearnedAssessment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Shared mutable state threaded through the agent pipeline: the submission, accumulating findings,
+ * the learned assessment, the indicative premium, and the append-only audit trail.
+ */
+public class UnderwritingContext {
+
+    private final Submission submission;
+    private final List<Finding> findings = new ArrayList<>();
+    private final AuditTrail auditTrail = new AuditTrail();
+    private LearnedAssessment learnedAssessment;
+    private Money indicativePremium;
+
+    public UnderwritingContext(Submission submission) {
+        this.submission = submission;
+    }
+
+    public Submission submission() {
+        return submission;
+    }
+
+    public void addFindings(List<Finding> newFindings) {
+        if (newFindings != null) {
+            findings.addAll(newFindings);
+        }
+    }
+
+    public void addFinding(Finding finding) {
+        if (finding != null) {
+            findings.add(finding);
+        }
+    }
+
+    public List<Finding> findings() {
+        return List.copyOf(findings);
+    }
+
+    public int riskScore() {
+        return findings.stream().mapToInt(Finding::weight).sum();
+    }
+
+    /** Risk score excluding knockout weight — used for the pricing load so it isn't distorted. */
+    public int pricingScore() {
+        return findings.stream().filter(f -> !f.isKnockout()).mapToInt(Finding::weight).sum();
+    }
+
+    public boolean hasKnockout() {
+        return findings.stream().anyMatch(Finding::isKnockout);
+    }
+
+    public LearnedAssessment learnedAssessment() {
+        return learnedAssessment;
+    }
+
+    public void setLearnedAssessment(LearnedAssessment learnedAssessment) {
+        this.learnedAssessment = learnedAssessment;
+    }
+
+    public Money indicativePremium() {
+        return indicativePremium;
+    }
+
+    public void setIndicativePremium(Money indicativePremium) {
+        this.indicativePremium = indicativePremium;
+    }
+
+    public void audit(String agent, String detail) {
+        auditTrail.record(agent, detail);
+    }
+
+    public AuditTrail auditTrail() {
+        return auditTrail;
+    }
+}

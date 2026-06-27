@@ -1,0 +1,55 @@
+%% AI Underwriter Agent — Runtime, audit & observability (event-driven + HITL)
+flowchart TB
+    subgraph Ingress["Ingress"]
+        API["Intake API"]
+        FAST["Sync fast-path<br/>(quote / STP-eligible, low latency)"]
+        API --> FAST
+    end
+
+    API -->|publish SubmissionReceived| BROKER[("Event broker / log<br/>(Kafka)")]
+
+    subgraph Workflow["Durable workflow orchestration (Temporal)"]
+        WF["Submission workflow<br/>(retries, timers, replay)"]
+        S_ENRICH["enrich (MCP tools)"]
+        S_ASSESS["assess (rules + k-NN + RAG + evaluator)"]
+        S_PRICE["price"]
+        S_DECIDE["decide (guardrails)"]
+        WF --> S_ENRICH --> S_ASSESS --> S_PRICE --> S_DECIDE
+    end
+    BROKER --> WF
+
+    subgraph HITL["Human-in-the-loop"]
+        WORKQ[("Referral work queue")]
+        WB["Underwriter workbench"]
+        WORKQ --> WB
+    end
+    S_DECIDE -->|REFER: create work item, wait for signal| WORKQ
+    WB -->|decision signal + override| WF
+
+    subgraph Stores["Persistence"]
+        PG[("Postgres<br/>submissions, decisions, state, outcomes")]
+        AUDIT[("Append-only AUDIT log<br/>+ decision lineage (hash-chained)")]
+    end
+    WF -->|outbox| PG
+    WF -->|every step, tool call, prompt, source, override| AUDIT
+    S_DECIDE -->|publish DecisionMade| BROKER
+
+    subgraph DLQ["Reliability"]
+        RETRY["retries / backoff"]
+        DEAD[("Dead-letter queue")]
+    end
+    WF -.failure.-> RETRY -.exhausted.-> DEAD
+
+    subgraph Obs["Observability & dashboards"]
+        OTEL["OpenTelemetry traces<br/>(correlation id end-to-end)"]
+        PROM["Micrometer -> Prometheus<br/>(metrics)"]
+        GRAF["Grafana: ops + technical"]
+        BIZ["Underwriting performance dashboard<br/>(STP rate, decision mix, loss ratio, latency, cost)"]
+        OTEL --> GRAF
+        PROM --> GRAF
+        PROM --> BIZ
+    end
+    Workflow -.emit.- OTEL
+    Workflow -.emit.- PROM
+    AUDIT --> BIZ
+    BROKER -->|outcomes stream| FLY["Data flywheel<br/>(book, RAG, evals)"]

@@ -1,0 +1,44 @@
+{
+  "reference": "TRM-VH-2026-0142",
+  "applicant": {
+    "name": "1234567 Ontario Inc.",
+    "brokerName": "Northbridge Brokers",
+    "priorLossesDeclared": false,
+    "priorLossCount": 0
+  },
+  "location": {
+    "addressLine": "55 Maple Lane",
+    "city": "Sudbury",
+    "province": "ON",
+    "postalCode": "P3A 1A1",
+    "latitude": 46.4917,
+    "longitude": -80.9930
+  },
+  "building": {
+    "construction": "Frame",
+    "occupancyType": "Detached Home",
+    "units": 1,
+    "squareFeet": 2200,
+    "yearBuilt": 1968,
+    "roofAgeYears": 24,
+    "renovationPlanned": false,
+    "demolitionPlanned": false
+  },
+  "vacancy": {
+    "vacantSince": "2025-09-01",
+    "inspectionIntervalHours": 48,
+    "utilitiesOn": true,
+    "waterShutOff": true,
+    "securitySystem": false
+  },
+  "protection": {
+    "monitoredAlarm": false,
+    "sprinklered": false,
+    "distanceToHydrantMeters": 120,
+    "distanceToFireHallKm": 9
+  },
+  "requestedCoverage": {
+    "amount": 450000,
+    "currency": "CAD"
+  }
+}

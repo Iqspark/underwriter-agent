@@ -1,0 +1,27 @@
+%% AI Underwriter Agent — Graceful degradation (fail to a safe floor, never fail the submission)
+flowchart TB
+    SUB["Submission in flight"] --> Q1{LLM available?}
+    Q1 -- no --> D1["Use offline template rationale<br/>(decision unaffected)"]
+    Q1 -- yes --> OK1["RAG-grounded rationale"]
+
+    SUB --> Q2{RAG / vector store up?}
+    Q2 -- no --> D2["Skip RAG advisory finding<br/>(rules + k-NN still decide)"]
+    Q2 -- yes --> OK2["Advisory finding + citations"]
+
+    SUB --> Q3{MCP enrichment tool up?}
+    Q3 -- no --> D3["Use book-only signals;<br/>if a CRITICAL field is missing -> REFER"]
+    Q3 -- yes --> OK3["External peril/crime/property data"]
+
+    SUB --> Q4{Datastore up?}
+    Q4 -- no --> D4["Reject new writes (503),<br/>queue retains events;<br/>in-flight workflows resume on recovery"]
+    Q4 -- yes --> OK4["Persist decision + audit"]
+
+    SUB --> Q5{Broker / workflow engine up?}
+    Q5 -- no --> D5["Sync fast-path still serves<br/>STP-eligible simple quotes"]
+    Q5 -- yes --> OK5["Full async pipeline"]
+
+    D1 --> FLOOR["Deterministic floor:<br/>rules guardrails + k-NN always available"]
+    D2 --> FLOOR
+    D3 --> FLOOR
+    D5 --> FLOOR
+    FLOOR --> OUT["Decision still produced<br/>(or safely REFERRED), fully audited"]

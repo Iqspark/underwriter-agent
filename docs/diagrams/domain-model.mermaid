@@ -1,0 +1,96 @@
+%% AI Underwriter Agent — Domain model
+classDiagram
+    class Submission {
+        +String reference
+        +Applicant applicant
+        +RiskLocation location
+        +Building building
+        +Vacancy vacancy
+        +Protection protection
+        +Money requestedCoverage
+    }
+    class Applicant {
+        +String name
+        +String brokerName
+        +boolean priorLossesDeclared
+        +int priorLossCount
+    }
+    class RiskLocation {
+        +String addressLine
+        +String city
+        +String province
+        +String postalCode
+        +Double latitude
+        +Double longitude
+    }
+    class Building {
+        +String construction
+        +String occupancyType
+        +Integer units
+        +Integer squareFeet
+        +Integer yearBuilt
+        +Integer roofAgeYears
+        +boolean renovationPlanned
+        +boolean demolitionPlanned
+    }
+    class Vacancy {
+        +LocalDate vacantSince
+        +Integer inspectionIntervalHours
+        +boolean utilitiesOn
+        +boolean waterShutOff
+        +boolean securitySystem
+    }
+    class Protection {
+        +boolean monitoredAlarm
+        +boolean sprinklered
+        +Integer distanceToHydrantMeters
+        +Integer distanceToFireHallKm
+    }
+    class Money {
+        +BigDecimal amount
+        +String currency
+    }
+    class Decision {
+        +String reference
+        +DecisionOutcome outcome
+        +int riskScore
+        +List~Finding~ findings
+        +List~String~ conditions
+        +Money indicativePremium
+        +String rationale
+        +List~String~ auditTrail
+        +Instant decidedAt
+    }
+    class Finding {
+        +String code
+        +Severity severity
+        +String category
+        +String message
+        +String rationale
+        +String source
+    }
+    class DecisionOutcome {
+        <<enum>>
+        APPROVE
+        REFER
+        DECLINE
+    }
+    class Severity {
+        <<enum>>
+        INFO
+        LOW
+        MEDIUM
+        HIGH
+        KNOCKOUT
+    }
+
+    Submission *-- Applicant
+    Submission *-- RiskLocation
+    Submission *-- Building
+    Submission *-- Vacancy
+    Submission *-- Protection
+    Submission *-- Money
+    Decision *-- Finding
+    Decision *-- Money
+    Decision --> DecisionOutcome
+    Finding --> Severity

@@ -1,0 +1,38 @@
+# Contents / personal-belongings line rules. The loader scopes every rule here to line CONTENTS.
+# Shared rules live in rules/shared.yml (property-only rules there are restricted via `lines:`).
+
+rules:
+
+  - id: missing-contents-value
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: contentsValueMissing, op: isTrue } ]
+    message: "Missing required field: contents value"
+    rationale: "The total contents sum insured is required to assess and rate the risk."
+
+  - id: high-value-items-unscheduled
+    code: HIGH_VALUE_ITEMS_UNSCHEDULED
+    category: RISK
+    severity: HIGH
+    all:
+      - { fact: highValueItemsValue, op: gt, value: 25000 }
+      - { fact: highValueItemsScheduled, op: isFalse }
+    message: "High-value items (${highValueItemsValue}) are not individually scheduled"
+    rationale: "Jewellery/art/electronics above the unscheduled sub-limit are effectively uninsured; schedule them or cap exposure."
+
+  - id: contents-no-security
+    code: CONTENTS_NO_SECURITY
+    category: RISK
+    severity: MEDIUM
+    all: [ { fact: noSecurityDevice, op: isTrue } ]
+    message: "No security device protecting the contents"
+    rationale: "Theft is the dominant contents peril; absence of an alarm/lock raises frequency and severity."
+
+  - id: contents-acv-basis
+    code: CONTENTS_ACV_BASIS
+    category: RISK
+    severity: LOW
+    all: [ { fact: acvBasis, op: isTrue } ]
+    message: "Actual-cash-value (not replacement-cost) basis"
+    rationale: "ACV settlement depreciates the claim; confirm the insured understands the lower recovery."

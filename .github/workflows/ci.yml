@@ -1,0 +1,42 @@
+name: CI
+
+# Compiles and tests the AI Underwriter Agent on infrastructure that has JDK 21 and
+# Maven Central access (unlike the local agent sandbox, which has neither).
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & test (JDK 21)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Show toolchain
+        run: |
+          java -version
+          mvn -v
+
+      - name: Build & run tests
+        run: mvn -B -ntp verify
+
+      - name: Publish test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/*'
+          if-no-files-found: ignore

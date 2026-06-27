@@ -1,0 +1,16 @@
+%% AI Underwriter Agent — CI/CD pipeline with quality, fairness & security gates
+flowchart LR
+    DEV["Commit / PR"] --> CI["CI: build + unit/component/integration tests"]
+    CI --> SEC["Security: SAST, deps, secrets, PII-egress"]
+    SEC --> EVAL["AI eval harness vs golden set<br/>(decision, retrieval, groundedness)"]
+    EVAL --> FAIR["Fairness / bias check"]
+    FAIR --> RED["Red-team regression<br/>(prompt injection, leakage)"]
+    RED --> GATE{All gates pass?}
+    GATE -- no --> DEV
+    GATE -- yes --> ART["Build signed container + SBOM"]
+    ART --> DEPLOYT["Deploy to test / staging (IaC)"]
+    DEPLOYT --> SHADOW["Shadow / champion-challenger<br/>(record, don't act)"]
+    SHADOW --> SIGN{Governance sign-off<br/>(rule/model/prompt change)}
+    SIGN -- yes --> CANARY["Canary / blue-green to prod<br/>(Canadian region)"]
+    CANARY --> MON["Monitor: SLOs, drift, fairness, cost"]
+    MON -- regression --> ROLL["Auto rollback"]

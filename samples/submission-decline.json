@@ -1,0 +1,43 @@
+{
+  "reference": "TRM-VH-2026-0177",
+  "applicant": {
+    "name": "Hillside Holdings Ltd.",
+    "brokerName": "Prairie Insurance Partners",
+    "priorLossesDeclared": true,
+    "priorLossCount": 3
+  },
+  "location": {
+    "addressLine": "Rural Route 7",
+    "city": "Flin Flon",
+    "province": "MB",
+    "latitude": 54.7682,
+    "longitude": -101.8650
+  },
+  "building": {
+    "construction": "Frame",
+    "occupancyType": "Detached Home",
+    "units": 1,
+    "squareFeet": 1800,
+    "yearBuilt": 1955,
+    "roofAgeYears": 30,
+    "renovationPlanned": false,
+    "demolitionPlanned": false
+  },
+  "vacancy": {
+    "vacantSince": "2024-11-01",
+    "inspectionIntervalHours": 168,
+    "utilitiesOn": true,
+    "waterShutOff": false,
+    "securitySystem": false
+  },
+  "protection": {
+    "monitoredAlarm": false,
+    "sprinklered": false,
+    "distanceToHydrantMeters": 400,
+    "distanceToFireHallKm": 25
+  },
+  "requestedCoverage": {
+    "amount": 300000,
+    "currency": "CAD"
+  }
+}

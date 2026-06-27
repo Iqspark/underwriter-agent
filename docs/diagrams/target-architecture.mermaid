@@ -1,0 +1,70 @@
+%% AI Underwriter Agent — Target-state architecture (AI-maximized, human-augmenting)
+flowchart TB
+    subgraph Channels["Channels"]
+        BRK["Broker portal / email / API"]
+    end
+
+    subgraph Triage["Routing"]
+        ROUTE["Triage & Router<br/>(complexity + completeness -> autonomy tier)"]
+    end
+
+    subgraph Tools["MCP Tool Layer (standardized)"]
+        T1["Geocoding"]
+        T2["Peril scores<br/>(flood / wildfire / wind / crime)"]
+        T3["Property & imagery data"]
+        T4["Business registry / sanctions / AML"]
+        T5["Internal: PAS / CRM / doc store"]
+    end
+
+    subgraph Knowledge["Knowledge & Memory"]
+        VS[("Vector store<br/>wordings, guidelines, precedent")]
+        BOOK[("Historical book<br/>policies + outcomes")]
+    end
+
+    subgraph Agents["Agentic core (orchestrator-workers + evaluator)"]
+        ORCH["Orchestrator"]
+        A_INTAKE["Intake & extraction<br/>(multimodal LLM/OCR)"]
+        A_ENRICH["Enrichment agent<br/>(calls MCP tools)"]
+        A_RAG["RAG / guideline agent"]
+        A_LEARN["Pattern-learning agent<br/>(k-NN + ML)"]
+        A_PRICE["Pricing agent"]
+        A_DRAFT["Drafting agent<br/>(quote, conditions, emails, UW memo)"]
+        EVAL["Evaluator / critic<br/>(groundedness + compliance check)"]
+    end
+
+    subgraph Decision["Decision authority (deterministic)"]
+        GUARD["Rules guardrails<br/>(knockouts, compliance)"]
+        DEC["Decision: APPROVE / REFER / DECLINE<br/>+ price + cited rationale + audit"]
+    end
+
+    subgraph Human["Human-in-the-loop"]
+        WB["Underwriter workbench<br/>(review, override, conditions)"]
+    end
+
+    subgraph Platform["Cross-cutting platform"]
+        GR["Layered guardrails<br/>(input/tool/output, PII, injection)"]
+        OBS["Observability + eval harness<br/>(traces, LLM-as-judge, cost)"]
+        GOV["Governance: audit, lineage,<br/>versioned prompts/policies"]
+    end
+
+    BRK --> ROUTE --> ORCH
+    ORCH --> A_INTAKE --> A_ENRICH
+    A_ENRICH <--> Tools
+    A_ENRICH --> A_RAG
+    A_RAG <--> VS
+    A_RAG --> A_LEARN
+    A_LEARN <--> BOOK
+    A_LEARN --> A_PRICE --> A_DRAFT
+    A_DRAFT --> EVAL
+    EVAL -->|revise if weak| ORCH
+    EVAL --> GUARD --> DEC
+    ROUTE -->|STP tier: auto-approve in bounds| GUARD
+    DEC --> WB
+    WB -->|override + outcome| Feedback["Feedback / data flywheel"]
+    Feedback --> BOOK
+    Feedback --> VS
+    Feedback --> OBS
+
+    GR -.guards.- Agents
+    OBS -.observes.- Agents
+    GOV -.records.- Decision

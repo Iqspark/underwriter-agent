@@ -1,0 +1,29 @@
+{
+  "reference": "TRM-CONT-2026-0001",
+  "lineOfBusiness": "CONTENTS",
+  "applicant": {
+    "name": "Jordan Tenant",
+    "brokerName": "Downtown Insurance Group",
+    "priorLossesDeclared": false,
+    "priorLossCount": 0
+  },
+  "location": {
+    "addressLine": "55 Queen Street West, Unit 1203",
+    "city": "Toronto",
+    "province": "ON",
+    "postalCode": "M5H 2M9",
+    "latitude": 43.6510,
+    "longitude": -79.3470
+  },
+  "contents": {
+    "contentsValue": 90000,
+    "highValueItemsValue": 40000,
+    "highValueItemsScheduled": false,
+    "replacementCost": true,
+    "securityDevice": true
+  },
+  "requestedCoverage": {
+    "amount": 90000,
+    "currency": "CAD"
+  }
+}

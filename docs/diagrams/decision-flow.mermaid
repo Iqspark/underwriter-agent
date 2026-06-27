@@ -1,0 +1,13 @@
+%% AI Underwriter Agent — Decision policy
+flowchart TD
+    START([Findings + risk score]) --> KO{"Any KNOCKOUT finding?<br/> e.g. a condition-precedent breach<br/>(vacant-home: inspection > 72h)"}
+    KO -- Yes --> DECLINE[/"DECLINE<br/>(attach curing condition<br/>so UW can convert to conditional bind)"/]
+    KO -- No --> GAP{"Missing field, data<br/>contradiction, or<br/>unresolved location?"}
+    GAP -- Yes --> REFER[/"REFER<br/>to human underwriter"/]
+    GAP -- No --> SCORE{"Risk weight >= 6?"}
+    SCORE -- Yes --> REFER
+    SCORE -- No --> APPROVE[/"APPROVE<br/>on standard terms"/]
+
+    DECLINE --> HUMAN([Human underwriter decides<br/>— agent never auto-binds])
+    REFER --> HUMAN
+    APPROVE --> HUMAN

@@ -1,0 +1,32 @@
+%% AI Underwriter Agent — C4 System Context
+flowchart TB
+    BROKER["Broker / partner<br/>(submits risks, receives quotes)"]
+    UW["Underwriter / senior UW<br/>(reviews, decides, overrides)"]
+    COMP["Compliance / auditor<br/>(reviews decisions & lineage)"]
+    ADMIN["Admin / model risk<br/>(configures rules, approves changes)"]
+
+    SYS["AI Underwriter Agent<br/>(multi-line, AI-assisted, human-decided)"]
+
+    LLM["LLM provider (Claude)<br/>+ embedding model"]
+    ENRICH["Enrichment data<br/>(geocoding, peril/crime, property)"]
+    PAS["Policy Admin System<br/>(binding / issuance)"]
+    CRM["CRM / broker portal"]
+    DOCS["Document store"]
+    IDP["Identity provider (OIDC)"]
+
+    BROKER -->|submission| SYS
+    SYS -->|quote / decision| BROKER
+    UW -->|review & decide| SYS
+    SYS -->|prepared file + recommendation| UW
+    COMP -->|audit & lineage| SYS
+    ADMIN -->|rules / thresholds / approvals| SYS
+
+    SYS <-->|de-identified prompts/embeddings| LLM
+    SYS <-->|scoped MCP tool calls| ENRICH
+    SYS <-->|bind / status| PAS
+    SYS <-->|accounts / submissions| CRM
+    SYS <-->|documents| DOCS
+    SYS <-->|authN/authZ| IDP
+
+    classDef ext fill:#eee,stroke:#999;
+    class LLM,ENRICH,PAS,CRM,DOCS,IDP ext;

@@ -1,0 +1,44 @@
+%% AI Underwriter Agent — Security, AuthZ & PII (trust boundaries + controls)
+flowchart TB
+    subgraph Untrusted["UNTRUSTED zone (broker / internet)"]
+        BRK["Broker / partner / underwriter"]
+        DOCS["Broker-submitted docs & emails<br/>(treated as untrusted input)"]
+    end
+
+    subgraph Edge["Edge"]
+        GW["API Gateway<br/>TLS 1.2+, WAF, rate limit, schema validation"]
+        IDP["OIDC Identity Provider (SSO)<br/>MFA"]
+    end
+
+    subgraph App["INTERNAL trust zone (app)"]
+        AUTHN["AuthN: OAuth2 Resource Server<br/>validate JWT / mTLS svc-to-svc"]
+        AUTHZ["AuthZ: RBAC + ABAC policy engine<br/>roles + LOB/region + authority limits + four-eyes"]
+        SVC["Underwriting service<br/>(agents, decision core)"]
+        PIIGUARD["PII guard<br/>classify, minimize, redact"]
+    end
+
+    subgraph Data["Data zone (encrypted)"]
+        PG[("Postgres<br/>TLS + AES-256 at rest;<br/>field-level encryption for sensitive PII")]
+        TOK[("PII vault / tokenization")]
+        AUD[("Immutable audit<br/>access-controlled, PII-aware, hash-chained")]
+        SEC[("Secrets manager / KMS")]
+    end
+
+    subgraph AIzone["AI / external (cross-boundary)"]
+        REDACT["PII redaction / pseudonymization<br/>before any external call"]
+        LLM["LLM (Claude) — Canadian residency<br/>or offline model for PII content"]
+        VS[("Vector store<br/>de-identified embeddings;<br/>PII held by reference")]
+        MCP["MCP tools (scoped tokens,<br/>least privilege, output validated)"]
+    end
+
+    BRK --> GW --> IDP --> AUTHN --> AUTHZ --> SVC
+    DOCS --> GW
+    SVC --> PIIGUARD
+    PIIGUARD --> PG
+    PIIGUARD --> TOK
+    SVC --> AUD
+    SVC --> SEC
+    PIIGUARD --> REDACT --> LLM
+    PIIGUARD --> REDACT --> VS
+    SVC --> MCP
+    AUTHZ -.deny / step-up.-> BRK

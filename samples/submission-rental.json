@@ -1,0 +1,38 @@
+{
+  "reference": "TRM-RENT-2026-0001",
+  "lineOfBusiness": "RENTAL",
+  "applicant": {
+    "name": "Landlord Holdings Inc.",
+    "brokerName": "Downtown Insurance Group",
+    "priorLossesDeclared": false,
+    "priorLossCount": 0
+  },
+  "location": {
+    "addressLine": "120 King Street West",
+    "city": "Toronto",
+    "province": "ON",
+    "postalCode": "M5H 1A9",
+    "latitude": 43.6480,
+    "longitude": -79.3860
+  },
+  "building": {
+    "construction": "Masonry",
+    "occupancyType": "Apartment",
+    "units": 4,
+    "squareFeet": 5200,
+    "yearBuilt": 2001,
+    "roofAgeYears": 9,
+    "renovationPlanned": false,
+    "demolitionPlanned": false
+  },
+  "rental": {
+    "tenancyType": "LONG_TERM",
+    "shortTermRentalEndorsed": false,
+    "liabilityLimit": 2000000,
+    "tenantScreening": true
+  },
+  "requestedCoverage": {
+    "amount": 950000,
+    "currency": "CAD"
+  }
+}

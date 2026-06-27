@@ -1,0 +1,29 @@
+%% AI Underwriter Agent — Case-based learning flow
+flowchart LR
+    SUB["New submission"] --> FEAT["PolicyFeatures<br/>(numeric + categorical)"]
+    BOOK[("Historical book<br/>HistoricalPolicyRepository")] --> RANGES["FeatureRanges<br/>(min/max normalize)"]
+    FEAT --> SIM["SimilarityEngine<br/>weighted Gower distance"]
+    RANGES --> SIM
+    BOOK --> SIM
+    SIM --> KNN["k nearest comparables"]
+    KNN --> AGG["Similarity-weighted aggregate"]
+    AGG --> CP["claim probability"]
+    AGG --> LR["expected loss ratio"]
+    AGG --> RATE["fair rate / $1,000"]
+    AGG --> PERIL["dominant peril"]
+    BOOK --> AREA["AreaRiskService<br/>theft & claim rate by city"]
+    AREA --> LOAD["area theft load"]
+
+    CP --> LA["LearnedAssessment"]
+    LR --> LA
+    RATE --> LA
+    PERIL --> LA
+    AREA --> LA
+    KNN --> CASES["top comparable cases<br/>(shown to underwriter)"]
+    CASES --> LA
+
+    LA --> AGENT["PatternLearningAgent<br/>-> findings"]
+    LA --> PRICE["PricingAgent<br/>rate x area load"]
+    AGENT --> ORCH["DecisionOrchestrator<br/>blend with guardrails<br/>(most conservative)"]
+    PRICE --> ORCH
+    LOAD --> PRICE

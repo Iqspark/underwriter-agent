@@ -1,0 +1,46 @@
+# Rental / landlord line rules. The loader scopes every rule in this file to line RENTAL.
+# Shared rules live in rules/shared.yml.
+
+rules:
+
+  - id: str-without-endorsement
+    code: STR_WITHOUT_ENDORSEMENT
+    category: COMPLIANCE
+    severity: KNOCKOUT
+    all:
+      - { fact: shortTermRental, op: isTrue }
+      - { fact: shortTermRentalEndorsed, op: isFalse }
+    message: "Short-term rental without a short-term-rental endorsement"
+    rationale: "STR exposure is not covered without the endorsement; a loss would be deniable. Attach a short-term-rental endorsement or decline."
+
+  - id: missing-liability-limit
+    code: MISSING_LIABILITY_LIMIT
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: liabilityLimitMissing, op: isTrue } ]
+    message: "Liability limit not provided"
+    rationale: "A liability limit is required to bind a tenant-occupied risk; obtain it from the broker."
+
+  - id: low-liability-limit
+    code: LOW_LIABILITY_LIMIT
+    category: RISK
+    severity: MEDIUM
+    all: [ { fact: liabilityLimit, op: lt, value: 1000000 } ]
+    message: "Liability limit ${liabilityLimit} is below the $1M minimum"
+    rationale: "Tenant-occupied risks carry liability exposure; $1M is the typical minimum limit."
+
+  - id: short-term-rental
+    code: SHORT_TERM_RENTAL
+    category: RISK
+    severity: LOW
+    all: [ { fact: shortTermRental, op: isTrue } ]
+    message: "Short-term rental (higher turnover/occupancy risk)"
+    rationale: "Frequent guest turnover raises liability and damage frequency versus long-term tenancy."
+
+  - id: no-tenant-screening
+    code: NO_TENANT_SCREENING
+    category: MORAL_HAZARD
+    severity: MEDIUM
+    all: [ { fact: noTenantScreening, op: isTrue } ]
+    message: "No tenant screening performed"
+    rationale: "Tenant screening reduces tenant-damage and non-payment risk; absence is a negative."

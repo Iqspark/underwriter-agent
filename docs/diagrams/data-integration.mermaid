@@ -1,0 +1,49 @@
+%% AI Underwriter Agent — Data & integration architecture
+flowchart TB
+    subgraph Inbound["Inbound integrations"]
+        BRKAPI["Broker portal / partner API"]
+        EMAIL["Email / document intake"]
+        CRMIN["CRM (accounts)"]
+    end
+
+    subgraph Core["Agent core"]
+        INTAKE["Intake + extraction"]
+        DECIDE["Decision pipeline"]
+    end
+
+    subgraph Stores["Operational data"]
+        OLTP[("Postgres: submissions,<br/>decisions, state, outcomes")]
+        AUDIT[("Audit / lineage")]
+        VS[("Vector store: knowledge")]
+        BOOK[("Historical book")]
+    end
+
+    subgraph Outbound["Outbound integrations"]
+        PAS["Policy Admin System (bind/issue)"]
+        CRMOUT["CRM / broker notifications"]
+        DOCS["Document store"]
+    end
+
+    subgraph Analytics["Analytics & flywheel"]
+        EVENTS[("Event log: SubmissionReceived,<br/>DecisionMade, OutcomeRecorded")]
+        WH[("Analytics / warehouse")]
+        FLY["Flywheel jobs:<br/>refresh book, RAG, eval set"]
+    end
+
+    BRKAPI --> INTAKE
+    EMAIL --> INTAKE
+    CRMIN --> INTAKE
+    INTAKE --> DECIDE
+    DECIDE --> OLTP
+    DECIDE --> AUDIT
+    DECIDE --> EVENTS
+    DECIDE -->|bind/refer| PAS
+    DECIDE --> CRMOUT
+    DECIDE --> DOCS
+    PAS -->|claims / realized outcomes| EVENTS
+    EVENTS --> WH
+    EVENTS --> FLY
+    FLY --> BOOK
+    FLY --> VS
+    BOOK --> DECIDE
+    VS --> DECIDE

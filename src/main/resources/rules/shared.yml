@@ -1,0 +1,152 @@
+# Shared underwriting rules — apply to EVERY line of business.
+# Line-specific rules live in rules/<line>.yml (e.g. vacant-home.yml, rental.yml).
+# Each rule fires when ALL its `all` conditions hold. Ops: eq, ne, gt, gte, lt, lte,
+# eqIgnoreCase, isTrue, isFalse, isNull, isNotNull. message/rationale support {fact} interpolation.
+
+rules:
+
+  # ---- Completeness & data integrity ----
+  - id: missing-reference
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: missingReference, op: isTrue } ]
+    message: "Missing required field: reference"
+    rationale: "Submission reference is required to track the file."
+
+  - id: missing-applicant-name
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: missingApplicantName, op: isTrue } ]
+    message: "Missing required field: applicant.name"
+    rationale: "Named insured is required."
+
+  - id: missing-location
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: missingLocation, op: isTrue } ]
+    message: "Missing required field: location.city/province"
+    rationale: "City and province are required for the remoteness screen and rating."
+
+  - id: missing-building
+    lines: [ VACANT_HOME, RENTAL ]   # property lines; contents/personal-belongings may have no building
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: missingBuilding, op: isTrue } ]
+    message: "Missing required field: building"
+    rationale: "Building characteristics are required to assess the risk."
+
+  - id: contradiction-detached-units
+    code: DATA_CONTRADICTION
+    category: COMPLETENESS
+    severity: HIGH
+    all:
+      - { fact: occupancy, op: eqIgnoreCase, value: "Detached Home" }
+      - { fact: units, op: gt, value: 2 }
+    message: "Data contradiction on building.units: detached home with {units} units"
+    rationale: "A detached home should have 1-2 units; re-confirm occupancy type or unit count with the broker."
+
+  - id: contradiction-detached-area
+    code: DATA_CONTRADICTION
+    category: COMPLETENESS
+    severity: HIGH
+    all:
+      - { fact: occupancy, op: eqIgnoreCase, value: "Detached Home" }
+      - { fact: squareFeet, op: gt, value: 25000 }
+    message: "Data contradiction on building.squareFeet: detached home with {squareFeet} sq ft"
+    rationale: "A 25,000+ sq ft 'detached home' is implausible; re-verify the area and occupancy."
+
+  - id: contradiction-year-too-old
+    code: DATA_CONTRADICTION
+    category: COMPLETENESS
+    severity: HIGH
+    all: [ { fact: yearBuilt, op: lt, value: 1700 } ]
+    message: "Data contradiction on building.yearBuilt: {yearBuilt}"
+    rationale: "Year built is outside a plausible range; re-confirm with the broker."
+
+  - id: contradiction-year-future
+    code: DATA_CONTRADICTION
+    category: COMPLETENESS
+    severity: HIGH
+    all: [ { fact: yearBuilt, op: gt, value: 2026 } ]
+    message: "Data contradiction on building.yearBuilt: {yearBuilt}"
+    rationale: "Year built is outside a plausible range; re-confirm with the broker."
+
+  # ---- Coverage adequacy ----
+  - id: possible-underinsurance
+    lines: [ VACANT_HOME, RENTAL ]   # building rebuild-cost check; not meaningful for contents
+    code: POSSIBLE_UNDERINSURANCE
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: perSqft, op: lt, value: 100 } ]
+    message: "Coverage is only ${perSqft}/sqft"
+    rationale: "Below a plausible rebuild cost; confirm sum insured to avoid co-insurance/underinsurance."
+
+  - id: coverage-high-vs-area
+    lines: [ VACANT_HOME, RENTAL ]
+    code: COVERAGE_HIGH_VS_AREA
+    category: COMPLETENESS
+    severity: LOW
+    all: [ { fact: perSqft, op: gt, value: 1500 } ]
+    message: "Coverage is ${perSqft}/sqft"
+    rationale: "Unusually high for the floor area; re-verify the sum insured or the square footage."
+
+  # ---- Location remoteness (100 km rule) ----
+  - id: location-unresolved
+    code: LOCATION_UNRESOLVED
+    category: LOCATION
+    severity: MEDIUM
+    all:
+      - { fact: locationPresent, op: isTrue }
+      - { fact: locationResolved, op: isFalse }
+    message: "Could not resolve property location"
+    rationale: "No coordinates or recognised province; refer for manual geo review."
+
+  - id: remote-location
+    code: REMOTE_LOCATION
+    category: LOCATION
+    severity: HIGH
+    all: [ { fact: remote, op: isTrue } ]
+    message: "Remote: {nearestDistanceKm} km from nearest major city ({nearestCity})"
+    rationale: "More than 100 km from every major city — slower emergency response and harder 72-hour inspection compliance."
+
+  - id: location-within-range
+    code: LOCATION_WITHIN_RANGE
+    category: LOCATION
+    severity: INFO
+    all:
+      - { fact: locationResolved, op: isTrue }
+      - { fact: remote, op: isFalse }
+    message: "Within range: {nearestDistanceKm} km from {nearestCity}"
+    rationale: "Within 100 km of a major city — normal emergency response expected."
+
+  # ---- Fire protection ----
+  - id: far-from-hydrant
+    code: FAR_FROM_HYDRANT
+    category: RISK
+    severity: MEDIUM
+    all: [ { fact: hydrantMeters, op: gt, value: 300 } ]
+    message: "Nearest hydrant {hydrantMeters}m away"
+    rationale: "Beyond ~300m the firefighting water supply is limited, raising fire severity."
+
+  - id: sprinklered
+    code: SPRINKLERED
+    category: RISK
+    severity: INFO
+    all: [ { fact: sprinklered, op: isTrue } ]
+    message: "Property is sprinklered"
+    rationale: "Active sprinkler protection materially reduces fire severity - a mitigating factor."
+
+  # ---- Moral hazard ----
+  - id: prior-losses
+    code: PRIOR_LOSSES
+    category: MORAL_HAZARD
+    severity: HIGH
+    all:
+      - { fact: priorLossesDeclared, op: isTrue }
+      - { fact: priorLossCount, op: gte, value: 2 }
+    message: "{priorLossCount} prior losses declared"
+    rationale: "Multiple prior losses are a frequency signal; review loss history before binding."

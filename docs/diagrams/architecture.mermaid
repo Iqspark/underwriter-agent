@@ -1,0 +1,59 @@
+%% AI Underwriter Agent — Component / Container Architecture
+flowchart TB
+    subgraph Client["Clients"]
+        Broker["Broker portal / Policy admin system"]
+        Curl["API consumer (curl / Postman / service)"]
+    end
+
+    subgraph Service["underwriter-agent (Spring Boot, Java 21)"]
+        API["UnderwritingController<br/>REST API"]
+
+        subgraph Extraction["Extraction layer"]
+            EXT["DocumentExtractor<br/>(KeyValueDocumentExtractor)"]
+        end
+
+        subgraph Pipeline["Agent pipeline"]
+            ORCH["DecisionOrchestrator"]
+            A1["IntakeAgent (10)"]
+            A2["RiskProfilingAgent (20)"]
+            A3["ComplianceAgent (30)"]
+            A4["PricingAgent (40)"]
+        end
+
+        subgraph RulesLayer["Rules layer (deterministic)"]
+            ENG["RulesEngine"]
+            R1["CompletenessRule"]
+            R2["RemotenessRule"]
+            R3["ConditionPrecedentRule"]
+            R4["RiskFactorRule"]
+            GEO["GeoService<br/>(haversine; remoteness screen — 100 km is the vacant-home instance)"]
+        end
+
+        subgraph Reasoning["Reasoning layer (narrative only)"]
+            LLM["LlmReasoner"]
+            TMPL["TemplateLlmReasoner<br/>(offline default)"]
+            ANTH["AnthropicLlmReasoner<br/>(@Primary when API key set)"]
+        end
+
+        CTX["UnderwritingContext<br/>+ AuditTrail"]
+    end
+
+    subgraph External["External"]
+        CLAUDE["Anthropic Claude<br/>Messages API"]
+    end
+
+    Broker --> API
+    Curl --> API
+    API --> EXT
+    API --> ORCH
+    EXT --> ORCH
+    ORCH --> A1 --> A2 --> A3 --> A4
+    A2 --> ENG
+    ENG --> R1 & R2 & R3 & R4
+    R2 --> GEO
+    ORCH --> LLM
+    LLM -.implemented by.-> TMPL
+    LLM -.implemented by.-> ANTH
+    ANTH --> CLAUDE
+    A1 & A2 & A3 & A4 --> CTX
+    ORCH --> CTX

@@ -1,0 +1,48 @@
+%% AI Underwriter Agent — Submission processing sequence
+sequenceDiagram
+    autonumber
+    actor Client
+    participant API as UnderwritingController
+    participant EXT as DocumentExtractor
+    participant ORCH as DecisionOrchestrator
+    participant CTX as UnderwritingContext
+    participant INT as IntakeAgent
+    participant RISK as RiskProfilingAgent
+    participant ENG as RulesEngine
+    participant COMP as ComplianceAgent
+    participant PRICE as PricingAgent
+    participant LLM as LlmReasoner
+
+    Client->>API: POST /submissions (Submission JSON)
+    note over API,EXT: /documents endpoint runs EXT.extract() first
+    opt raw document
+        API->>EXT: extract(rawText)
+        EXT-->>API: Submission
+    end
+    API->>ORCH: decide(submission)
+    ORCH->>CTX: new UnderwritingContext(submission)
+
+    ORCH->>INT: handle(ctx)
+    INT->>CTX: record intake event
+
+    ORCH->>RISK: handle(ctx)
+    RISK->>ENG: evaluate(submission)
+    ENG-->>RISK: List<Finding>
+    RISK->>CTX: addFindings(findings) + audit
+
+    ORCH->>COMP: handle(ctx)
+    COMP->>CTX: read knockouts -> clearance/breach audit
+
+    ORCH->>PRICE: handle(ctx)
+    PRICE->>CTX: setIndicativePremium() + audit
+
+    ORCH->>ORCH: deriveOutcome() + deriveConditions()
+    ORCH->>LLM: summarize(submission, findings, outcome)
+    alt primary reasoner OK
+        LLM-->>ORCH: rationale text
+    else primary throws
+        ORCH->>LLM: fallback (template) summarize(...)
+        LLM-->>ORCH: rationale text
+    end
+    ORCH-->>API: Decision (outcome, score, findings, conditions, premium, rationale, auditTrail)
+    API-->>Client: 200 OK Decision JSON

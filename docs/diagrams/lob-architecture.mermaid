@@ -1,0 +1,48 @@
+%% AI Underwriter Agent — Multi-line (Line-of-Business plug-in) architecture
+flowchart TB
+    SUB["Submission envelope<br/>(common fields + sealed RiskDetails)"] --> ROUTER["LOB Router<br/>(detect line of business)"]
+
+    subgraph Registry["LineOfBusiness registry (pluggable modules)"]
+        LOB_VH["VacantHome module"]
+        LOB_FARM["Farm module"]
+        LOB_RENT["Rental / Landlord module"]
+        LOB_CONT["Contents / Personal belongings module"]
+        LOB_X["…future lines"]
+    end
+
+    ROUTER --> Registry
+
+    subgraph Module["Each LOB module supplies"]
+        M1["RiskDetails schema"]
+        M2["FeatureExtractor (-> generic vector)"]
+        M3["LOB-specific rules (knockouts)"]
+        M4["Knowledge sources (wordings/guidelines)"]
+        M5["Rater (pricing)"]
+        M6["Required fields"]
+    end
+    Registry --> Module
+
+    subgraph Core["Generic agent core (LOB-agnostic)"]
+        RULES["RulesEngine<br/>(shared rules + LOB rules)"]
+        LEARN["SimilarityEngine<br/>(book partitioned by LOB)"]
+        RAG["RAG retriever<br/>(corpus filtered by LOB)"]
+        PRICE["Pricing orchestration"]
+        ORCH["DecisionOrchestrator<br/>(guardrails + learned + RAG, most conservative)"]
+        EVAL["Evaluator / guardrails"]
+        DEC["Decision + cited rationale + audit"]
+    end
+
+    subgraph Shared["Shared cross-LOB services (MCP)"]
+        GEO["Geocoding"]
+        PERIL["Peril/crime/flood/wildfire scores"]
+        SANC["Sanctions / AML"]
+        PROP["Property data"]
+    end
+
+    Module --> Core
+    Core <--> Shared
+    RULES --> ORCH
+    LEARN --> ORCH
+    RAG --> ORCH
+    PRICE --> ORCH
+    ORCH --> EVAL --> DEC

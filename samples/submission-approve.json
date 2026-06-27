@@ -1,0 +1,44 @@
+{
+  "reference": "TRM-VH-2026-0203",
+  "applicant": {
+    "name": "Jardine Family Trust",
+    "brokerName": "Downtown Insurance Group",
+    "priorLossesDeclared": false,
+    "priorLossCount": 0
+  },
+  "location": {
+    "addressLine": "210 King Street West",
+    "city": "Toronto",
+    "province": "ON",
+    "postalCode": "M5H 1J8",
+    "latitude": 43.6480,
+    "longitude": -79.3860
+  },
+  "building": {
+    "construction": "Masonry",
+    "occupancyType": "Detached Home",
+    "units": 1,
+    "squareFeet": 2400,
+    "yearBuilt": 2012,
+    "roofAgeYears": 6,
+    "renovationPlanned": false,
+    "demolitionPlanned": false
+  },
+  "vacancy": {
+    "vacantSince": "2026-04-15",
+    "inspectionIntervalHours": 24,
+    "utilitiesOn": true,
+    "waterShutOff": true,
+    "securitySystem": true
+  },
+  "protection": {
+    "monitoredAlarm": true,
+    "sprinklered": true,
+    "distanceToHydrantMeters": 40,
+    "distanceToFireHallKm": 3
+  },
+  "requestedCoverage": {
+    "amount": 900000,
+    "currency": "CAD"
+  }
+}

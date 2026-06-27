@@ -1,0 +1,111 @@
+# Vacant-home line rules. The loader scopes every rule in this file to line VACANT_HOME
+# (no per-rule `line:` needed). Shared rules live in rules/shared.yml.
+
+rules:
+
+  # ---- Completeness specific to vacant risks ----
+  - id: missing-vacant-since
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: missingVacantSince, op: isTrue } ]
+    message: "Missing required field: vacancy.vacantSince"
+    rationale: "Vacancy start date is required — vacancy duration drives the risk profile."
+
+  - id: missing-inspection-interval
+    code: MISSING_FIELD
+    category: COMPLETENESS
+    severity: MEDIUM
+    all: [ { fact: missingInspectionInterval, op: isTrue } ]
+    message: "Missing required field: vacancy.inspectionIntervalHours"
+    rationale: "Inspection interval is required to test the 72-hour condition precedent."
+
+  # ---- Condition precedent (compliance) ----
+  - id: inspection-interval-breach
+    code: INSPECTION_INTERVAL_BREACH
+    category: COMPLIANCE
+    severity: KNOCKOUT
+    all: [ { fact: inspectionIntervalHours, op: gt, value: 72 } ]
+    message: "Inspection interval {inspectionIntervalHours}h exceeds the 72h condition precedent"
+    rationale: "Breaches PR0003 cl.2 + Supervisory Warranty 300130. Loss would be deniable. Attach a 72-hour inspection condition precedent or decline."
+
+  - id: water-not-shut-off
+    code: WATER_NOT_SHUT_OFF
+    category: COMPLIANCE
+    severity: HIGH
+    all:
+      - { fact: utilitiesOn, op: isTrue }
+      - { fact: waterShutOff, op: isFalse }
+    message: "Utilities on and water not shut off at a vacant property"
+    rationale: "Escape-of-water is the dominant vacant-home loss. Require water shut-off and a drained system, or rate for it."
+
+  # ---- Risk factors ----
+  - id: long-vacancy
+    code: LONG_VACANCY
+    category: RISK
+    severity: HIGH
+    all: [ { fact: monthsVacant, op: gte, value: 12 } ]
+    message: "Vacant {monthsVacant} months"
+    rationale: "Vacancy over ~12 months sharply raises vandalism, water and undetected-loss exposure."
+
+  - id: moderate-vacancy
+    code: MODERATE_VACANCY
+    category: RISK
+    severity: MEDIUM
+    all:
+      - { fact: monthsVacant, op: gte, value: 6 }
+      - { fact: monthsVacant, op: lt, value: 12 }
+    message: "Vacant {monthsVacant} months"
+    rationale: "Vacancy of 6-12 months is an elevated but workable exposure."
+
+  - id: no-security
+    code: NO_SECURITY
+    category: RISK
+    severity: MEDIUM
+    all:
+      - { fact: vacancyPresent, op: isTrue }
+      - { fact: securitySystem, op: isFalse }
+    message: "No security system at a vacant property"
+    rationale: "No deterrent against vandalism/theft, the leading vacant-property losses."
+
+  - id: no-monitored-alarm
+    code: NO_MONITORED_ALARM
+    category: RISK
+    severity: LOW
+    all:
+      - { fact: protectionPresent, op: isTrue }
+      - { fact: monitoredAlarm, op: isFalse }
+    message: "No monitored alarm"
+    rationale: "Monitored alarm shortens response time to fire/intrusion; absence is a mild negative."
+
+  - id: far-from-fire-hall
+    code: FAR_FROM_FIRE_HALL
+    category: RISK
+    severity: MEDIUM
+    all: [ { fact: fireHallKm, op: gt, value: 13 } ]
+    message: "Fire hall {fireHallKm} km away"
+    rationale: "Beyond ~13 km, fire response degrades materially and rating should reflect it."
+
+  - id: old-roof
+    code: OLD_ROOF
+    category: RISK
+    severity: MEDIUM
+    all: [ { fact: roofAgeYears, op: gt, value: 20 } ]
+    message: "Roof age {roofAgeYears} years"
+    rationale: "Roofs over 20 years drive water-ingress claims, worse when unoccupied."
+
+  - id: demolition-planned
+    code: DEMOLITION_PLANNED
+    category: RISK
+    severity: HIGH
+    all: [ { fact: demolitionPlanned, op: isTrue } ]
+    message: "Demolition planned"
+    rationale: "Pending demolition changes insurable interest and intent; refer for special handling."
+
+  - id: renovation-planned
+    code: RENOVATION_PLANNED
+    category: RISK
+    severity: LOW
+    all: [ { fact: renovationPlanned, op: isTrue } ]
+    message: "Renovation planned"
+    rationale: "Active renovation introduces trade/liability exposure; confirm scope and contractor cover."
