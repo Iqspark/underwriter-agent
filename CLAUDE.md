@@ -13,7 +13,10 @@ dual-mode authN — HTTP Basic offline / OIDC-JWT when `issuer-uri` is set — R
 authority limits + four-eyes binding, and PII redaction). Phase 2 RAG grounding is built behind
 `underwriter.rag.enabled` (default off): Spring AI corpus ingest + retrieval + advisory agent
 (order 26, capped severity) + cited rationale (`RagLlmReasoner`), in-process ONNX embeddings, and an
-in-memory vector store by default (pgvector via the `pgvector` Maven profile). Three lines are wired:
+in-memory vector store by default (pgvector via the `pgvector` Maven profile). A Reviewer agent
+(`com.iqspark.underwriter.review.ReviewerAgent`, ADR-0022, gated by `underwriter.reviewer.enabled`,
+default on) runs after the decision is assembled: a deterministic coherence check plus an optional
+LLM critic that raise advisory `reviewFlags` (never changing the outcome). Three lines are wired:
 vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.

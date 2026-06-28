@@ -86,6 +86,12 @@ underwriter:
     min-score: 0.6        # drop weak matches
     max-severity: MEDIUM  # cap on the advisory RAG finding
 
+  # Reviewer agent (ADR-0022): a final coherence check on the assembled decision. Deterministic
+  # checks always run (e.g. the rationale must reflect every knockout); an LLM critic runs too when
+  # a chat model is configured. Advisory only — it flags and recommends human review, never decides.
+  reviewer:
+    enabled: true
+
 # Spring AI (used only when underwriter.rag.enabled=true). Set the Anthropic key to enable the
 # grounded LLM rationale; otherwise RAG still grounds + cites offline via the template reasoner.
 # spring:

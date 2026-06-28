@@ -8,6 +8,7 @@ import com.iqspark.underwriter.history.AreaRiskService;
 import com.iqspark.underwriter.history.HistoricalPolicyRepository;
 import com.iqspark.underwriter.history.SimilarityEngine;
 import com.iqspark.underwriter.llm.TemplateLlmReasoner;
+import com.iqspark.underwriter.review.ReviewerAgent;
 import com.iqspark.underwriter.rules.ConfigurableRulesEngine;
 import com.iqspark.underwriter.rules.FactExtractor;
 import com.iqspark.underwriter.rules.config.RuleConfigLoader;
@@ -40,7 +41,7 @@ class DecisionOrchestratorTest {
                 new ComplianceAgent(),
                 new PricingAgent(area));
 
-        orchestrator = new DecisionOrchestrator(agents, template, template, null, null);
+        orchestrator = new DecisionOrchestrator(agents, template, template, null, null, new ReviewerAgent(null));
     }
 
     @Test

@@ -1,7 +1,14 @@
 # ADR-0022: Reviewer agent — the LLM "skeptical underwriter" (evaluator/critic, formalized)
 
-**Status:** Proposed
+**Status:** Accepted (built)
 **Date:** 2026-06-26
+
+> **Build note (2026-06-26):** implemented as `com.iqspark.underwriter.review.ReviewerAgent`
+> (gated by `underwriter.reviewer.enabled`, default on), invoked by the `DecisionOrchestrator` after
+> the decision is assembled. A deterministic coherence check always runs (rationale must reflect
+> every knockout; outcome/rationale consistency); an LLM critic pass runs when a chat model is
+> configured. Flags are advisory — attached to the `Decision` as `reviewFlags` and audited; a
+> rationale defect triggers at most one LLM re-draft. The outcome is never changed (ADR-0001).
 **Related:** [ADR-0001](0001-rules-decide-llm-explains.md), [ADR-0008](0008-ai-maximized-architecture.md), [doc 7 §4.4](../07-target-architecture.md), [doc 8 §5](../08-recommended-solution.md), [doc 15](../15-testing-evaluation-quality.md)
 
 ## Context

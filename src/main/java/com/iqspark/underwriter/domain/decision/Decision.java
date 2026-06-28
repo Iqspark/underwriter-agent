@@ -21,6 +21,7 @@ public record Decision(
         String rationale,
         LearnedAssessment learnedAssessment,
         List<RetrievedSource> retrievedSources,
+        List<ReviewFlag> reviewFlags,
         List<String> auditTrail,
         Instant decidedAt
 ) {}

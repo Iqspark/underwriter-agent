@@ -30,7 +30,7 @@ progresses. Status: **Built** = implemented (Phase 0); **Designed** = specified,
 | FR-7 | Derive APPROVE/REFER/DECLINE | [doc 2 §6](02-architecture-design.md) | 0001, 0008 | Built |
 | FR-8 | Always attach knockout curing condition | [doc 2 §6](02-architecture-design.md) | 0001 | Built |
 | FR-9 | Indicative premium | [doc 5 §6](05-ai-learning-design.md) | 0006 | Built |
-| FR-10 | Written rationale (leads with knockout) | [doc 6](06-rag-design.md) | 0003, 0007; 0022 (reviewer contradiction-check) | Built (template/Claude; RAG-cited baseline built — flag-gated; reviewer agent designed) |
+| FR-10 | Written rationale (leads with knockout) | [doc 6](06-rag-design.md) | 0003, 0007; 0022 (reviewer contradiction-check) | Built (template/Claude; RAG-cited baseline built — flag-gated; reviewer agent built) |
 | FR-11 | Ordered audit trail | [doc 10](10-runtime-audit-observability.md) | 0010 | Partial — in-memory built; durable/tamper-evident designed |
 | FR-12 | Offline by default; Claude optional w/ fallback | [doc 6](06-rag-design.md) | 0003 | Built |
 | FR-13 | New rule = single `@Component` | [doc 2 §5](02-architecture-design.md) | 0004 | Built |

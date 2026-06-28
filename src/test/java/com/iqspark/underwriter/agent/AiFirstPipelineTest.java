@@ -7,6 +7,7 @@ import com.iqspark.underwriter.history.AreaRiskService;
 import com.iqspark.underwriter.history.HistoricalPolicyRepository;
 import com.iqspark.underwriter.history.SimilarityEngine;
 import com.iqspark.underwriter.llm.TemplateLlmReasoner;
+import com.iqspark.underwriter.review.ReviewerAgent;
 import com.iqspark.underwriter.rules.ConfigurableRulesEngine;
 import com.iqspark.underwriter.rules.FactExtractor;
 import com.iqspark.underwriter.rules.config.RuleConfigLoader;
@@ -38,7 +39,7 @@ class AiFirstPipelineTest {
                 new PatternLearningAgent(sim),
                 new ComplianceAgent(),
                 new PricingAgent(area));
-        orchestrator = new DecisionOrchestrator(agents, template, template, null, null);
+        orchestrator = new DecisionOrchestrator(agents, template, template, null, null, new ReviewerAgent(null));
     }
 
     @Test
@@ -58,7 +59,9 @@ class AiFirstPipelineTest {
         assertThat(d.auditTrail()).anyMatch(s -> s.contains("ComplianceAgent"));
         assertThat(d.auditTrail()).anyMatch(s -> s.contains("PricingAgent"));
         assertThat(d.auditTrail()).anyMatch(s -> s.contains("LlmReasoner"));
+        assertThat(d.auditTrail()).anyMatch(s -> s.contains("ReviewerAgent"));
         assertThat(d.auditTrail()).anyMatch(s -> s.contains("DecisionOrchestrator"));
+        assertThat(d.reviewFlags()).isNotNull();
     }
 
     @Test

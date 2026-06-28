@@ -90,6 +90,9 @@ flowchart TB
 - **Built since (Phase 2):** **RAG grounding** baseline — corpus ingest + retrieval + advisory
   agent + cited rationale, flag-gated `underwriter.rag.enabled`, Spring AI + in-process ONNX
   embeddings + in-memory/pgvector store ([ADR-0007](adr/0007-rag-spring-ai.md)).
+- **Built since (Phase 6 slice):** Reviewer agent (LLM "skeptical underwriter") — a coherence /
+  rationale-vs-findings contradiction check on the assembled decision, advisory only
+  ([ADR-0022](adr/0022-reviewer-agent.md)).
 - **Designed / next:** event runtime →
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
