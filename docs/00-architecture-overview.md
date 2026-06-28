@@ -95,7 +95,11 @@ flowchart TB
   ([ADR-0022](adr/0022-reviewer-agent.md)); and **autonomy-tier routing** (AUTO / ASSISTED /
   SPECIALIST with QA sampling) classifying each decision within configurable bounds
   ([ADR-0025](adr/0025-autonomy-tiers-stp.md)).
-- **Designed / next:** event runtime →
+- **Built since (Phase 3 lean tier):** event-driven runtime — async case lifecycle with a durable
+  state machine, in-process events (after-commit `@Async`), outbox, idempotency and retries→
+  dead-letter; `202 Accepted` + poll API, sync `/submissions` fast-path retained
+  ([ADR-0010](adr/0010-event-driven-runtime.md); Kafka/Temporal deferred).
+- **Designed / next:**
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
   governance, cost) threaded through.

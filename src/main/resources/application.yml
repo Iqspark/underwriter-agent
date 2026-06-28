@@ -104,6 +104,14 @@ underwriter:
     require-high-confidence: true
     qa-sample-rate: 1.0
 
+  # Event-driven runtime (Phase 3, lean tier): async case lifecycle + durable state machine + outbox.
+  # async=true processes off the request thread (after commit); set false to process inline.
+  # Graduate to Kafka + Temporal later without changing the seams.
+  runtime:
+    async: true
+    max-attempts: 3
+    outbox-poll-ms: 5000
+
 # Spring AI (used only when underwriter.rag.enabled=true). Set the Anthropic key to enable the
 # grounded LLM rationale; otherwise RAG still grounds + cites offline via the template reasoner.
 # spring:

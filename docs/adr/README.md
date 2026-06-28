@@ -14,7 +14,7 @@ Format is lightweight (after Michael Nygard). Status values: Proposed, Accepted,
 | [0007](0007-rag-spring-ai.md) | RAG via Spring AI (advisory, offline-first) | Accepted (baseline built) |
 | [0008](0008-ai-maximized-architecture.md) | AI-maximized, human-augmenting target architecture | Proposed |
 | [0009](0009-line-of-business-plugin.md) | Line-of-Business plug-in architecture (multi-line) | Proposed |
-| [0010](0010-event-driven-runtime.md) | Event-driven runtime, durable audit & observability | Proposed |
+| [0010](0010-event-driven-runtime.md) | Event-driven runtime, durable audit & observability | Accepted (lean tier built) |
 | [0011](0011-security-privacy.md) | Security, authorization & PII / privacy | Proposed |
 | [0012](0012-resilience-dr.md) | Resilience & disaster recovery | Proposed |
 | [0013](0013-ai-governance-model-risk.md) | AI governance & model risk management | Proposed |

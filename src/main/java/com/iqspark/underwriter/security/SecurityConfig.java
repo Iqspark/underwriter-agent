@@ -51,10 +51,14 @@ public class SecurityConfig {
                         // API docs require authentication (any role).
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
                         .authenticated()
-                        // Underwrite a submission/document: underwriters or a service identity.
+                        // Underwrite a submission/document, or accept an async case: underwriters or a service identity.
                         .requestMatchers(HttpMethod.POST,
-                                "/api/underwriting/submissions", "/api/underwriting/documents")
+                                "/api/underwriting/submissions", "/api/underwriting/documents",
+                                "/api/underwriting/cases")
                         .hasAnyRole(AppRoles.UNDERWRITER, AppRoles.SENIOR_UNDERWRITER, AppRoles.SERVICE)
+                        // Poll a case: underwriters and auditors (read-only).
+                        .requestMatchers(HttpMethod.GET, "/api/underwriting/cases/**")
+                        .hasAnyRole(AppRoles.UNDERWRITER, AppRoles.SENIOR_UNDERWRITER, AppRoles.AUDITOR)
                         // Binding/approval actions: underwriters only (admins are segregated).
                         .requestMatchers(HttpMethod.POST, "/api/underwriting/decisions/*/approvals")
                         .hasAnyRole(AppRoles.UNDERWRITER, AppRoles.SENIOR_UNDERWRITER)

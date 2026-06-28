@@ -19,8 +19,12 @@ default on) runs after the decision is assembled: a deterministic coherence chec
 LLM critic that raise advisory `reviewFlags` (never changing the outcome). An `AutonomyRouter`
 (`com.iqspark.underwriter.autonomy`, ADR-0025, `underwriter.autonomy.enabled`, default on) then
 classifies each decision into an `AutonomyTier` (AUTO / ASSISTED / SPECIALIST) with QA sampling,
-attached to the `Decision` as `autonomy` (advisory routing; never changes the outcome). Three lines
-are wired: vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
+attached to the `Decision` as `autonomy` (advisory routing; never changes the outcome). Phase 3 lean
+event-driven runtime is built (`com.iqspark.underwriter.runtime`, ADR-0010): an async case lifecycle
+with a durable state machine, in-process after-commit `@Async` events, the outbox pattern,
+idempotency and retries→dead-letter, exposed as `POST /api/underwriting/cases` (202 + poll
+`GET /cases/{id}`); the synchronous `/submissions` fast-path is retained, and Kafka/Temporal remain
+deferred (seams unchanged). Three lines are wired: vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.
 

@@ -77,7 +77,7 @@ progresses. Status: **Built** = implemented (Phase 0); **Designed** = specified,
 | Q1 | How wide are the **STP auto-approve bounds**? | Narrow ([doc 8 §4](08-recommended-solution.md)); widen on eval evidence. Router **built** ([ADR-0025](adr/0025-autonomy-tiers-stp.md)); bounds config-owned, uncalibrated | Phase 6 (autonomy) |
 | Q2 | **Cloud vs offline posture** & data residency for LLM/embeddings/enrichment | Offline floor as the baseline; cloud where policy allows | Phase 2 (RAG)/4 (enrichment) |
 | Q3 | **Build vs buy** enrichment data (peril/property/geo) | Pluggable via MCP either way | Phase 4 |
-| Q4 | When to adopt **Kafka / Temporal** (vs lean Postgres+`@Async`) | Graduate on volume | Phase 3 |
+| Q4 | When to adopt **Kafka / Temporal** (vs lean Postgres+`@Async`) | Graduate on volume. Lean tier **built** ([ADR-0010](adr/0010-event-driven-runtime.md)): async cases + state machine + outbox + retries/DLQ; broker/Temporal deferred | Phase 3 |
 | Q5 | **Fairness group definitions** and data source for disparate-impact testing | Framework defined ([doc 13](13-ai-governance-model-risk.md)); needs real data + agreed groups | Before production |
 | Q6 | **Retention periods** & legal-hold specifics | Schedule + crypto-shredding ([doc 11](11-security-privacy.md)); periods TBD | Phase 1 |
 | Q7 | **LOB rollout priority** | vacant → rental → contents → farm ([doc 9](09-multi-line-architecture.md)) | Per business |

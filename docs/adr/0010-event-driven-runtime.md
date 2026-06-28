@@ -1,8 +1,18 @@
 # ADR-0010: Event-driven runtime, durable audit & observability
 
-**Status:** Proposed
-**Date:** 2026-06-19
+**Status:** Accepted (lean tier built)
+**Date:** 2026-06-19 (lean tier built 2026-06-27)
 **Related:** [ADR-0002](0002-multi-agent-pipeline.md), [ADR-0008](0008-ai-maximized-architecture.md), [doc 10](../10-runtime-audit-observability.md)
+
+> **Build note (2026-06-27):** the **lean tier** (doc 10 §5) is implemented in
+> `com.iqspark.underwriter.runtime`: an async case lifecycle (`SubmissionCaseEntity` durable state
+> machine `RECEIVED → ASSESSING → AUTO_DECIDED | REFERRED → BOUND/CLOSED | FAILED`), in-process
+> events via `@Async @TransactionalEventListener(AFTER_COMMIT)`, the **outbox** pattern
+> (`OutboxEventEntity` + `OutboxRelay`), **idempotency** (on submission reference), and
+> **retries→dead-letter** (`underwriter.runtime.max-attempts`). Intake is `POST /api/underwriting/cases`
+> → `202 Accepted` + case id; poll `GET /api/underwriting/cases/{id}`. The synchronous
+> `/submissions` fast-path is unchanged. **Kafka + Temporal remain deferred** — the seams (events,
+> state machine, outbox) don't change when they're introduced.
 
 ## Context
 

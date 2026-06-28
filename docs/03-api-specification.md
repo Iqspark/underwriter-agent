@@ -16,7 +16,9 @@
 
 | Method | Path | Request body | Success | Description |
 |--------|------|--------------|---------|-------------|
-| POST | `/api/underwriting/submissions` | `Submission` (JSON) | `200` `Decision` | Underwrite a structured submission. |
+| POST | `/api/underwriting/submissions` | `Submission` (JSON) | `200` `Decision` | Underwrite a structured submission (synchronous fast-path). |
+| POST | `/api/underwriting/cases` | `Submission` (JSON) | `202` `CaseView` | Accept a submission as a durable async case (event-driven runtime); idempotent on `reference`. |
+| GET | `/api/underwriting/cases/{caseId}` | — | `200` `CaseView`, or `404` | Poll a case: lifecycle status (`RECEIVED`/`ASSESSING`/`AUTO_DECIDED`/`REFERRED`/`BOUND`/`CLOSED`/`FAILED`) and, once processed, the `Decision`. |
 | POST | `/api/underwriting/documents` | raw text (`text/plain`) | `200` `Decision` | Extract a submission from quote-summary text, then underwrite it. |
 | GET | `/api/underwriting/health` | — | `200` status | Liveness check. |
 | GET | `/api/underwriting/decisions/{reference}` | — | `200` stored decision + audit lineage, or `404` | The persisted decision (latest for that reference) with its durable, hash-chained audit trail. |
