@@ -9,6 +9,8 @@ import com.iqspark.underwriter.autonomy.AutonomyRouter;
 import com.iqspark.underwriter.geo.GeoService;
 import com.iqspark.underwriter.history.AreaRiskService;
 import com.iqspark.underwriter.history.HistoricalPolicyRepository;
+import com.iqspark.underwriter.history.LogisticRiskModel;
+import com.iqspark.underwriter.history.ModelProperties;
 import com.iqspark.underwriter.history.SimilarityEngine;
 import com.iqspark.underwriter.llm.TemplateLlmReasoner;
 import com.iqspark.underwriter.review.ReviewerAgent;
@@ -40,7 +42,7 @@ class DecisionOrchestratorTest {
         List<UnderwritingAgent> agents = List.of(
                 new IntakeAgent(),
                 new RiskProfilingAgent(rules),
-                new PatternLearningAgent(sim),
+                new PatternLearningAgent(sim, new LogisticRiskModel(repo), new ModelProperties()),
                 new ComplianceAgent(),
                 new PricingAgent(area));
 

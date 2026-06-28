@@ -33,8 +33,12 @@ built: an `UnstructuredDataAgent` (order 12, `com.iqspark.underwriter.intake`, A
 bounded `SemanticFeatures` from a submission's free-text `notes` (LLM when a chat model is set, else a
 keyword heuristic) and raises advisory findings; a `DraftingService`
 (`com.iqspark.underwriter.drafting`, ADR-0028) drafts quote/conditions/broker-email/UW-memo via
-`GET /api/underwriting/decisions/{reference}/drafts` (multimodal/vision intake deferred). Three lines
-are wired: vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
+`GET /api/underwriting/decisions/{reference}/drafts` (multimodal/vision intake deferred). A hybrid
+predictive model (ADR-0020) is built behind a `RiskModel` seam: the default `LogisticRiskModel`
+(offline logistic regression trained on the book at startup; GBM pluggable) predicts claim
+probability and `PatternLearningAgent` blends it with the k-NN signal (`underwriter.model.blend`,
+default max) while k-NN still supplies the comparable cases. Three lines are wired: vacant home
+(reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.
 

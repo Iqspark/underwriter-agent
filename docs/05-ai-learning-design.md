@@ -146,12 +146,13 @@ Configuration: `underwriter.history.size` (default 1500), `underwriter.history.s
 over real policy + claims data (CSV/JDBC/warehouse) that yields `HistoricalPolicy` records.
 Everything downstream — similarity, area stats, pricing, decisioning — is source-agnostic.
 
-**Future — hybrid prediction:** add a trained gradient-boosting model (XGBoost/LightGBM class) as a
-complementary signal behind the same `SimilarityEngine`/assessment seam. The principle is to
-**separate prediction from explanation**: the GBM (which learns feature importance and non-linear
-interactions the fixed Gower weights cannot) drives the predicted numbers, while k-NN is always run
-to retrieve the comparable cases shown as evidence. The orchestrator blends the two conservatively.
-See [ADR-0020](adr/0020-hybrid-predictive-model.md) (and HLD §12, ADR-0006 alternatives).
+**Hybrid prediction (built — offline baseline):** a trained `RiskModel` behind the assessment seam
+predicts claim probability, blended with the k-NN signal (default **max** = most conservative) while
+k-NN is always run to retrieve the comparable cases shown as evidence — **prediction separated from
+explanation**. The default `LogisticRiskModel` is an offline, dependency-free logistic regression
+trained on the book at startup; a gradient-boosting model (XGBoost/LightGBM) — which learns feature
+importance and non-linear interactions the fixed Gower weights cannot — plugs in behind the same
+seam. See [ADR-0020](adr/0020-hybrid-predictive-model.md) (and HLD §12, ADR-0006 alternatives).
 
 **Future — semantic features:** an early `UnstructuredDataAgent` uses an LLM to extract a bounded,
 schema-constrained set of risk features (e.g. `deferredMaintenancePresent`) from inspection reports,

@@ -110,6 +110,9 @@ flowchart TB
   ([ADR-0021](adr/0021-semantic-feature-extraction.md)); and **drafting** — quote/conditions/broker-
   email/UW-memo via `GET /decisions/{ref}/drafts` ([ADR-0028](adr/0028-phase5-intake-drafting.md));
   multimodal/vision intake deferred.
+- **Built since (ADR-0020):** hybrid predictive model — a trained `RiskModel` (offline logistic
+  stand-in; GBM/XGBoost pluggable behind the seam) predicts claim probability, blended with k-NN
+  (k-NN still supplies the comparable cases).
 - **Designed / next:**
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,

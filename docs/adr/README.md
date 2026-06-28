@@ -24,7 +24,7 @@ Format is lightweight (after Michael Nygard). Status values: Proposed, Accepted,
 | [0017](0017-data-integration.md) | Data & integration architecture | Proposed |
 | [0018](0018-config-driven-rules.md) | Config-driven rules (rules as data, not code) | Accepted |
 | [0019](0019-phase1-persistence-metrics.md) | Phase 1 — persistence, durable audit & baseline metrics | Accepted |
-| [0020](0020-hybrid-predictive-model.md) | Hybrid predictive model — GBM predicts, k-NN explains | Proposed |
+| [0020](0020-hybrid-predictive-model.md) | Hybrid predictive model — GBM predicts, k-NN explains | Accepted (offline baseline built) |
 | [0021](0021-semantic-feature-extraction.md) | Semantic feature extraction from unstructured documents | Proposed |
 | [0022](0022-reviewer-agent.md) | Reviewer agent — the LLM "skeptical underwriter" (evaluator, formalized) | Accepted (built) |
 | [0023](0023-knn-scalability-ann.md) | k-NN scalability — ANN index over pgvector | Proposed |

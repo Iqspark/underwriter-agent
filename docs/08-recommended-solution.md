@@ -134,8 +134,9 @@ each condition — with no new infrastructure and no API key required.
 
 ## 7. What's deliberately deferred (and safe to defer)
 
-Trained ML model — k-NN carries us first, then a **hybrid GBM** signal is added behind the
-assessment seam (GBM predicts, k-NN explains; [ADR-0020](adr/0020-hybrid-predictive-model.md)), with
+Trained ML model — k-NN carries us first; a **hybrid** signal is now built behind the assessment
+seam (✅ offline logistic stand-in, real GBM/XGBoost pluggable; predicts while k-NN explains;
+[ADR-0020](adr/0020-hybrid-predictive-model.md)), with
 **ANN indexing** ([ADR-0023](adr/0023-knn-scalability-ann.md)) when the book grows large; hosted
 embeddings (offline ONNX is enough to start); full tool-calling autonomy (autonomy tiers are bounded
 and human-gated). Each has a clean seam to add later. *(Note: persistence + the **pgvector** store are no longer deferred — they're Phase 1

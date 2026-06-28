@@ -1,7 +1,16 @@
 # ADR-0020: Hybrid predictive model — trained GBM for prediction, k-NN for explanation
 
-**Status:** Proposed
-**Date:** 2026-06-26
+**Status:** Accepted (offline baseline built)
+**Date:** 2026-06-26 (built 2026-06-27)
+
+> **Build note (2026-06-27):** implemented behind a `RiskModel` seam in
+> `com.iqspark.underwriter.history`. The default `LogisticRiskModel` is an offline, dependency-free
+> logistic regression trained on the synthetic book at startup (a real GBM/XGBoost plugs in behind
+> the seam). `PatternLearningAgent` blends the model's claim probability with the k-NN signal
+> (`underwriter.model.blend`, default **max** = most conservative) while k-NN still supplies the
+> comparable cases (explanation) — "GBM predicts, k-NN explains." Gated by `underwriter.model.enabled`;
+> on a cold-start book the model is skipped. Separate exposure of the model-vs-k-NN probabilities and
+> SHAP-style attributions are the next step.
 **Related:** [ADR-0006](0006-case-based-learning.md), [doc 5](../05-ai-learning-design.md), [doc 2 §12](../02-architecture-design.md), [doc 13](../13-ai-governance-model-risk.md)
 
 ## Context
