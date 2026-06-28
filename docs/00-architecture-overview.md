@@ -92,7 +92,9 @@ flowchart TB
   embeddings + in-memory/pgvector store ([ADR-0007](adr/0007-rag-spring-ai.md)).
 - **Built since (Phase 6 slice):** Reviewer agent (LLM "skeptical underwriter") — a coherence /
   rationale-vs-findings contradiction check on the assembled decision, advisory only
-  ([ADR-0022](adr/0022-reviewer-agent.md)).
+  ([ADR-0022](adr/0022-reviewer-agent.md)); and **autonomy-tier routing** (AUTO / ASSISTED /
+  SPECIALIST with QA sampling) classifying each decision within configurable bounds
+  ([ADR-0025](adr/0025-autonomy-tiers-stp.md)).
 - **Designed / next:** event runtime →
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
@@ -112,5 +114,5 @@ flowchart TB
 `0` overview · `1` BRD · `2` HLD · `3` API · `4` runbook · `5` learning · `6` RAG · `7` target ·
 `8` **recommended solution** · `9` multi-line · `10` runtime/audit · `11` security/PII ·
 `12` resilience/DR · `13` governance/model-risk · `14` cost · `15` testing/eval ·
-`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0024](adr/) and
+`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0025](adr/) and
 [diagrams](diagrams/).

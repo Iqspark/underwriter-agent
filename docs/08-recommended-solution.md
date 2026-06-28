@@ -95,7 +95,7 @@ taper to ~10–20%** as the eval record builds. Bounds are config owned by UW le
 | **3** | **Event-driven runtime + durable workflow + async HITL** (broker, Temporal, retries/DLQ/outbox, state machine) | Handles enrichment/LLM latency, spikes, and human-in-the-loop |
 | **4** | **MCP enrichment** (geocoding + peril/**crime** + property data) | Biggest *accuracy* win; needs the async runtime |
 | **5** | **Multimodal intake + drafting** — incl. **semantic feature extraction** ([ADR-0021](adr/0021-semantic-feature-extraction.md)) | Biggest *time-savings* for people; also lifts accuracy by feeding extracted features to the model |
-| **6** | **Evaluator + autonomy tiers** — the **`ReviewerAgent`** critic ([ADR-0022](adr/0022-reviewer-agent.md)), layered guardrails, STP routing | Unlocks safe straight-through — now measurable & audited. **✅ ReviewerAgent built** (advisory coherence/contradiction check); autonomy tiers/STP routing pending. |
+| **6** | **Evaluator + autonomy tiers** — the **`ReviewerAgent`** critic ([ADR-0022](adr/0022-reviewer-agent.md)), layered guardrails, STP routing | Unlocks safe straight-through — now measurable & audited. **✅ ReviewerAgent built** (advisory coherence/contradiction check) and **autonomy-tier routing built** ([ADR-0025](adr/0025-autonomy-tiers-stp.md); AUTO/ASSISTED/SPECIALIST + QA sampling); STP auto-bind execution + layered guardrails pending. |
 | **7** | **Dashboards + AI-ops + data flywheel** (Grafana + UW performance dashboard, evals, drift, outcome feedback) | Required before widening autonomy |
 | **8** | **Production hardening** (authn/authz, model routing, scale, HA/DR) | Operational readiness |
 

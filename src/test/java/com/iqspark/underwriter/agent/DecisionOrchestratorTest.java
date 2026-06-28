@@ -1,8 +1,11 @@
 package com.iqspark.underwriter.agent;
 
+import com.iqspark.underwriter.domain.decision.AutonomyTier;
 import com.iqspark.underwriter.domain.decision.Decision;
 import com.iqspark.underwriter.domain.decision.DecisionOutcome;
 import com.iqspark.underwriter.domain.decision.Finding;
+import com.iqspark.underwriter.autonomy.AutonomyProperties;
+import com.iqspark.underwriter.autonomy.AutonomyRouter;
 import com.iqspark.underwriter.geo.GeoService;
 import com.iqspark.underwriter.history.AreaRiskService;
 import com.iqspark.underwriter.history.HistoricalPolicyRepository;
@@ -41,7 +44,8 @@ class DecisionOrchestratorTest {
                 new ComplianceAgent(),
                 new PricingAgent(area));
 
-        orchestrator = new DecisionOrchestrator(agents, template, template, null, null, new ReviewerAgent(null));
+        orchestrator = new DecisionOrchestrator(agents, template, template, null, null,
+                new ReviewerAgent(null), new AutonomyRouter(new AutonomyProperties()));
     }
 
     @Test
@@ -52,6 +56,7 @@ class DecisionOrchestratorTest {
         assertThat(d.conditions()).isNotEmpty();
         assertThat(d.indicativePremium()).isNotNull();
         assertThat(d.auditTrail()).isNotEmpty();
+        assertThat(d.autonomy().tier()).isEqualTo(AutonomyTier.SPECIALIST); // knockout -> senior
     }
 
     @Test

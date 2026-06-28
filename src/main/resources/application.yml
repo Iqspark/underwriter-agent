@@ -92,6 +92,18 @@ underwriter:
   reviewer:
     enabled: true
 
+  # Autonomy tiers / STP routing (ADR-0025). Classifies each decision as AUTO (straight-through,
+  # within bounds), ASSISTED, or SPECIALIST. Bounds are illustrative — calibrate + governance-gate
+  # before enabling real straight-through binding. QA-sample 100% of auto-approvals initially.
+  autonomy:
+    enabled: true
+    max-coverage: 750000
+    specialist-coverage: 2000000
+    claim-probability-max: 0.15
+    loss-ratio-max: 0.5
+    require-high-confidence: true
+    qa-sample-rate: 1.0
+
 # Spring AI (used only when underwriter.rag.enabled=true). Set the Anthropic key to enable the
 # grounded LLM rationale; otherwise RAG still grounds + cites offline via the template reasoner.
 # spring:

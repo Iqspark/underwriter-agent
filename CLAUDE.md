@@ -16,8 +16,11 @@ authority limits + four-eyes binding, and PII redaction). Phase 2 RAG grounding 
 in-memory vector store by default (pgvector via the `pgvector` Maven profile). A Reviewer agent
 (`com.iqspark.underwriter.review.ReviewerAgent`, ADR-0022, gated by `underwriter.reviewer.enabled`,
 default on) runs after the decision is assembled: a deterministic coherence check plus an optional
-LLM critic that raise advisory `reviewFlags` (never changing the outcome). Three lines are wired:
-vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
+LLM critic that raise advisory `reviewFlags` (never changing the outcome). An `AutonomyRouter`
+(`com.iqspark.underwriter.autonomy`, ADR-0025, `underwriter.autonomy.enabled`, default on) then
+classifies each decision into an `AutonomyTier` (AUTO / ASSISTED / SPECIALIST) with QA sampling,
+attached to the `Decision` as `autonomy` (advisory routing; never changes the outcome). Three lines
+are wired: vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.
 

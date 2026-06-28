@@ -74,7 +74,7 @@ progresses. Status: **Built** = implemented (Phase 0); **Designed** = specified,
 
 | # | Question | Default in the design | Needed by |
 |---|----------|-----------------------|-----------|
-| Q1 | How wide are the **STP auto-approve bounds**? | Narrow ([doc 8 §4](08-recommended-solution.md)); widen on eval evidence | Phase 6 (autonomy) |
+| Q1 | How wide are the **STP auto-approve bounds**? | Narrow ([doc 8 §4](08-recommended-solution.md)); widen on eval evidence. Router **built** ([ADR-0025](adr/0025-autonomy-tiers-stp.md)); bounds config-owned, uncalibrated | Phase 6 (autonomy) |
 | Q2 | **Cloud vs offline posture** & data residency for LLM/embeddings/enrichment | Offline floor as the baseline; cloud where policy allows | Phase 2 (RAG)/4 (enrichment) |
 | Q3 | **Build vs buy** enrichment data (peril/property/geo) | Pluggable via MCP either way | Phase 4 |
 | Q4 | When to adopt **Kafka / Temporal** (vs lean Postgres+`@Async`) | Graduate on volume | Phase 3 |

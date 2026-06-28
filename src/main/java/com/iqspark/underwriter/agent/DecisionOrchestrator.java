@@ -1,5 +1,7 @@
 package com.iqspark.underwriter.agent;
 
+import com.iqspark.underwriter.autonomy.AutonomyRouter;
+import com.iqspark.underwriter.domain.decision.AutonomyAssessment;
 import com.iqspark.underwriter.domain.decision.Decision;
 import com.iqspark.underwriter.domain.decision.DecisionOutcome;
 import com.iqspark.underwriter.domain.decision.Finding;
@@ -54,13 +56,15 @@ public class DecisionOrchestrator {
     private final DecisionStore decisionStore;
     private final DecisionMetrics metrics;
     private final ReviewerAgent reviewer;
+    private final AutonomyRouter autonomyRouter;
 
     public DecisionOrchestrator(List<UnderwritingAgent> agents,
                                 LlmReasoner primaryReasoner,
                                 TemplateLlmReasoner templateReasoner,
                                 @Nullable DecisionStore decisionStore,
                                 @Nullable DecisionMetrics metrics,
-                                @Nullable ReviewerAgent reviewer) {
+                                @Nullable ReviewerAgent reviewer,
+                                @Nullable AutonomyRouter autonomyRouter) {
         this.agents = agents.stream()
                 .sorted(Comparator.comparingInt(UnderwritingAgent::order))
                 .toList();
@@ -69,6 +73,7 @@ public class DecisionOrchestrator {
         this.decisionStore = decisionStore;
         this.metrics = metrics;
         this.reviewer = reviewer;
+        this.autonomyRouter = autonomyRouter;
     }
 
     public Decision decide(Submission submission) {
@@ -93,6 +98,17 @@ public class DecisionOrchestrator {
         rationale = reviewed.rationale();
         List<ReviewFlag> reviewFlags = reviewed.flags();
 
+        AutonomyAssessment autonomy = null;
+        if (autonomyRouter != null) {
+            double coverage = submission.requestedCoverage() != null
+                    ? submission.requestedCoverage().amount() : 0.0;
+            autonomy = autonomyRouter.evaluate(outcome, findings, learned, coverage, reviewFlags);
+            ctx.audit("AutonomyRouter", "Tier=%s%s — %s".formatted(
+                    autonomy.tier(),
+                    autonomy.qaSampled() ? " (QA-sampled)" : "",
+                    String.join("; ", autonomy.reasons())));
+        }
+
         ctx.audit("DecisionOrchestrator",
                 "Outcome=%s (guardrail=%s, learned=%s) riskScore=%d conditions=%d"
                         .formatted(outcome, guardrail, learnedOutcome, riskScore, conditions.size()));
@@ -108,6 +124,7 @@ public class DecisionOrchestrator {
                 learned,
                 ctx.retrievedSources(),
                 reviewFlags,
+                autonomy,
                 ctx.auditTrail().entries(),
                 Instant.now());
 
