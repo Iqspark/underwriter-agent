@@ -158,9 +158,10 @@ seam. See [ADR-0020](adr/0020-hybrid-predictive-model.md) (and HLD §12, ADR-000
 schema-constrained set of risk features (e.g. `deferredMaintenancePresent`) from inspection reports,
 broker emails and photos, which then feed these same models — see [ADR-0021](adr/0021-semantic-feature-extraction.md).
 
-**Future — scale:** the per-request linear scan in §4 is replaced by an approximate-nearest-neighbour
-(ANN) index over pgvector, with an exact weighted-Gower re-rank on the candidate set, when the book
-grows large — see [ADR-0023](adr/0023-knn-scalability-ann.md).
+**Scale (built):** the per-request linear scan in §4 sits behind a `CandidateRetriever` seam —
+brute-force by default, or an approximate-nearest-neighbour index (offline LSH; pgvector/HNSW in
+prod) with an exact weighted-Gower re-rank on the candidate set — selected by
+`underwriter.similarity.index`. See [ADR-0023](adr/0023-knn-scalability-ann.md).
 
 ## 8. Explainability & governance
 

@@ -17,7 +17,7 @@ progresses. Status: **Built** = implemented (Phase 0); **Designed** = specified,
 | Req | Summary | Design | ADR | Status |
 |-----|---------|--------|-----|--------|
 | FR-1 | Structured `Submission` → `Decision` via REST | [doc 2](02-architecture-design.md), [doc 3](03-api-specification.md) | 0002 | Built |
-| FR-1a | Learn from history (k-NN comparables → claim prob/loss/rate/peril) | [doc 5](05-ai-learning-design.md) | 0006; 0020 (hybrid), 0023 (ANN scale) | Built (k-NN + hybrid model: offline logistic stand-in, GBM pluggable); ANN Designed |
+| FR-1a | Learn from history (k-NN comparables → claim prob/loss/rate/peril) | [doc 5](05-ai-learning-design.md) | 0006; 0020 (hybrid), 0023 (ANN scale) | Built (k-NN + hybrid model + ANN retrieval seam: offline LSH, pgvector/HNSW in prod) |
 | FR-1b | Surface comparable cases + confidence | [doc 5](05-ai-learning-design.md) | 0006 | Built |
 | FR-1c | Area-level risk (theft/claim) → pricing & findings | [doc 5](05-ai-learning-design.md) | 0006 | Built |
 | FR-1d | Cold-start fallback when book is thin | [doc 5](05-ai-learning-design.md) | 0006 | Built |

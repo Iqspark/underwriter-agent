@@ -113,6 +113,9 @@ flowchart TB
 - **Built since (ADR-0020):** hybrid predictive model — a trained `RiskModel` (offline logistic
   stand-in; GBM/XGBoost pluggable behind the seam) predicts claim probability, blended with k-NN
   (k-NN still supplies the comparable cases).
+- **Built since (ADR-0023):** k-NN scalability — a `CandidateRetriever` seam (brute-force default;
+  offline LSH ANN with exact weighted-Gower re-rank; pgvector/HNSW in prod), config
+  `underwriter.similarity.index`.
 - **Designed / next:**
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
@@ -132,5 +135,5 @@ flowchart TB
 `0` overview · `1` BRD · `2` HLD · `3` API · `4` runbook · `5` learning · `6` RAG · `7` target ·
 `8` **recommended solution** · `9` multi-line · `10` runtime/audit · `11` security/PII ·
 `12` resilience/DR · `13` governance/model-risk · `14` cost · `15` testing/eval ·
-`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0028](adr/) and
+`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0028](adr/) (0023 built) and
 [diagrams](diagrams/).

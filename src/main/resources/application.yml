@@ -55,6 +55,7 @@ underwriter:
     seed: 42        # RNG seed (deterministic book for reproducibility/tests)
   similarity:
     k: 25           # number of nearest comparable policies used per assessment
+    index: bruteforce   # bruteforce (exact) | ann (LSH offline; pgvector HNSW in prod) — ADR-0023
   # Hybrid predictive model (ADR-0020): the trained model predicts claim probability and is blended
   # with the k-NN signal; k-NN still supplies the comparable cases (explanation). blend: max|mean|model|knn.
   model:

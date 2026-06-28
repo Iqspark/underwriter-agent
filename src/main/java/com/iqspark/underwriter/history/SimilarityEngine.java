@@ -7,6 +7,9 @@ import com.iqspark.underwriter.history.model.HistoricalPolicy;
 import com.iqspark.underwriter.history.model.LearnedAssessment;
 import com.iqspark.underwriter.history.model.Peril;
 import com.iqspark.underwriter.history.model.PolicyFeatures;
+import com.iqspark.underwriter.history.retrieval.BruteForceRetriever;
+import com.iqspark.underwriter.history.retrieval.CandidateRetriever;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -57,13 +60,25 @@ public class SimilarityEngine {
     private final HistoricalPolicyRepository repository;
     private final AreaRiskService areaRiskService;
     private final int k;
+    private final CandidateRetriever retriever;
 
+    /** Spring constructor — the retriever is selected by {@code underwriter.similarity.index}. */
+    @Autowired
     public SimilarityEngine(HistoricalPolicyRepository repository,
                             AreaRiskService areaRiskService,
-                            @Value("${underwriter.similarity.k:25}") int k) {
+                            @Value("${underwriter.similarity.k:25}") int k,
+                            CandidateRetriever retriever) {
         this.repository = repository;
         this.areaRiskService = areaRiskService;
         this.k = k;
+        this.retriever = retriever;
+    }
+
+    /** Convenience constructor (tests) — exact brute-force retrieval. */
+    public SimilarityEngine(HistoricalPolicyRepository repository,
+                            AreaRiskService areaRiskService,
+                            int k) {
+        this(repository, areaRiskService, k, new BruteForceRetriever());
     }
 
     public LearnedAssessment assess(Submission submission) {
@@ -71,16 +86,19 @@ public class SimilarityEngine {
         var areaRisk = areaRiskService.forCity(city);
 
         LineOfBusiness line = submission.effectiveLine();
-        List<HistoricalPolicy> candidates = repository.all().stream()
+        List<HistoricalPolicy> sameLine = repository.all().stream()
                 .filter(p -> p.line() == line)
                 .toList();
 
-        if (candidates.size() < MIN_BOOK_FOR_LEARNING) {
+        if (sameLine.size() < MIN_BOOK_FOR_LEARNING) {
             return LearnedAssessment.coldStart(areaRisk);
         }
 
         PolicyFeatures qf = PolicyFeatures.fromSubmission(submission);
         FeatureRanges ranges = repository.featureRanges();
+
+        // Candidate generation (brute force by default; ANN at scale). Exact re-rank follows.
+        List<HistoricalPolicy> candidates = retriever.candidates(qf, sameLine, ranges, k);
 
         List<Scored> scored = new ArrayList<>(candidates.size());
         for (HistoricalPolicy p : candidates) {

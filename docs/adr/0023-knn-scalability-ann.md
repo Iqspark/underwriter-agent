@@ -1,7 +1,15 @@
 # ADR-0023: k-NN scalability — approximate-nearest-neighbour index over pgvector
 
-**Status:** Proposed
-**Date:** 2026-06-26
+**Status:** Accepted (offline LSH baseline built)
+**Date:** 2026-06-26 (built 2026-06-27)
+
+> **Build note (2026-06-27):** implemented behind a `CandidateRetriever` seam in
+> `com.iqspark.underwriter.history.retrieval`. `BruteForceRetriever` (exact) is the default;
+> `AnnRetriever` is an offline random-hyperplane **LSH** index (per-line, cached) that returns a
+> bucket of candidates, with a **full-scan fallback** when a bucket is sparse. The `SimilarityEngine`
+> still does the **exact weighted-Gower re-rank** on the candidate set, so results are correct;
+> selected by `underwriter.similarity.index = bruteforce | ann`. In production the same seam is served
+> by **pgvector (HNSW)** — the LSH stand-in keeps it runnable/testable offline.
 **Related:** [ADR-0006](0006-case-based-learning.md), [ADR-0007](0007-rag-spring-ai.md), [ADR-0019](0019-phase1-persistence-metrics.md), [doc 2 §12](../02-architecture-design.md), [doc 5 §7](../05-ai-learning-design.md)
 
 ## Context

@@ -384,9 +384,9 @@ Rationale in [ADR-0005](adr/0005-java-spring-boot.md).
 
 - **Real data** — swap the synthetic generator in `HistoricalPolicyRepository` for a reader over
   real policy + claims data (CSV/JDBC/warehouse); everything downstream is source-agnostic.
-- **Indexing at scale** — replace the per-request linear k-NN scan with an approximate-nearest-
-  neighbour (ANN) index over pgvector (exact re-rank on the candidate set) when the book grows
-  large ([ADR-0023](adr/0023-knn-scalability-ann.md)).
+- **Indexing at scale** — ✅ built behind a `CandidateRetriever` seam (brute-force default; an offline
+  LSH ANN with an exact weighted-Gower re-rank; pgvector/HNSW in prod), selected by
+  `underwriter.similarity.index` ([ADR-0023](adr/0023-knn-scalability-ann.md)).
 - **Trained model (hybrid)** — add a gradient-boosted claim-probability/loss-ratio model as a
   complementary signal behind the assessment seam — **GBM predicts, k-NN still explains** (retains
   the comparable cases) ([ADR-0020](adr/0020-hybrid-predictive-model.md), [ADR-0006](adr/0006-case-based-learning.md)).
