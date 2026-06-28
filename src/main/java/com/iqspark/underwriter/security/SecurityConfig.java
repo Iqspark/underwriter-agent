@@ -69,6 +69,12 @@ public class SecurityConfig {
                         // Comparables preview: underwriters.
                         .requestMatchers(HttpMethod.POST, "/api/underwriting/history/comparables")
                         .hasAnyRole(AppRoles.UNDERWRITER, AppRoles.SENIOR_UNDERWRITER)
+                        // Performance dashboard: read access for underwriters, auditors, admins.
+                        .requestMatchers(HttpMethod.GET, "/api/underwriting/dashboard")
+                        .hasAnyRole(AppRoles.UNDERWRITER, AppRoles.SENIOR_UNDERWRITER, AppRoles.AUDITOR, AppRoles.ADMIN)
+                        // Realized-outcome feed (PAS/claims): service identity or senior underwriter.
+                        .requestMatchers(HttpMethod.POST, "/api/underwriting/outcomes")
+                        .hasAnyRole(AppRoles.SERVICE, AppRoles.SENIOR_UNDERWRITER)
                         .anyRequest().authenticated());
 
         if (issuerUri == null || issuerUri.isBlank()) {

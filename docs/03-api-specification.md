@@ -25,6 +25,8 @@
 | GET | `/api/underwriting/history/stats` | — | `200` book stats | Size + claim rate of the historical book. |
 | GET | `/api/underwriting/history/areas/{city}` | — | `200` `AreaRiskStat` | Learned claim/theft stats for an area. |
 | POST | `/api/underwriting/history/comparables` | `Submission` (JSON) | `200` `LearnedAssessment` | Preview the comparable cases + prediction without a full decision. |
+| GET | `/api/underwriting/dashboard` | — | `200` `DashboardView` | Underwriting-performance KPIs (decision mix, STP rate, premium, predicted-vs-realized). |
+| POST | `/api/underwriting/outcomes` | `OutcomeRequest` (JSON) | `202` | Record a realized outcome (claim/loss) for a decision — the data-flywheel feed. |
 
 ---
 

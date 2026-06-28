@@ -27,6 +27,9 @@ public class DecisionEntity {
     private double coverageAmount;
     private double premiumAmount;
     private String premiumCurrency;
+    private String tier;                       // autonomy tier (AUTO/ASSISTED/SPECIALIST)
+    private Double predictedClaimProbability;  // learned signal, for predicted-vs-realized
+    private Double expectedLossRatio;
 
     @Lob
     @Column(columnDefinition = "TEXT")
@@ -64,6 +67,12 @@ public class DecisionEntity {
     public void setPremiumAmount(double premiumAmount) { this.premiumAmount = premiumAmount; }
     public String getPremiumCurrency() { return premiumCurrency; }
     public void setPremiumCurrency(String premiumCurrency) { this.premiumCurrency = premiumCurrency; }
+    public String getTier() { return tier; }
+    public void setTier(String tier) { this.tier = tier; }
+    public Double getPredictedClaimProbability() { return predictedClaimProbability; }
+    public void setPredictedClaimProbability(Double v) { this.predictedClaimProbability = v; }
+    public Double getExpectedLossRatio() { return expectedLossRatio; }
+    public void setExpectedLossRatio(Double v) { this.expectedLossRatio = v; }
     public String getRationale() { return rationale; }
     public void setRationale(String rationale) { this.rationale = rationale; }
     public String getFindingsJson() { return findingsJson; }

@@ -129,7 +129,7 @@ public class DecisionOrchestrator {
                 Instant.now());
 
         persist(decision, submission);
-        record(outcome, submission);
+        recordMetrics(decision, submission);
         return decision;
     }
 
@@ -252,9 +252,12 @@ public class DecisionOrchestrator {
         }
     }
 
-    private void record(DecisionOutcome outcome, Submission submission) {
-        if (metrics != null) {
-            metrics.record(outcome, submission.effectiveLine());
+    private void recordMetrics(Decision decision, Submission submission) {
+        if (metrics == null) {
+            return;
         }
+        String tier = decision.autonomy() != null ? decision.autonomy().tier().name() : "NONE";
+        double premium = decision.indicativePremium() != null ? decision.indicativePremium().amount() : 0.0;
+        metrics.recordDecision(decision.outcome(), submission.effectiveLine(), tier, premium);
     }
 }

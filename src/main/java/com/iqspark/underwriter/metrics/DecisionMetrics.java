@@ -5,7 +5,10 @@ import com.iqspark.underwriter.domain.model.LineOfBusiness;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Component;
 
-/** Baseline decision metrics: a counter tagged by outcome and line of business. */
+/**
+ * Business metrics for the dashboards (doc 10 §4): decision mix by outcome/line/tier, premium
+ * distribution, and realized-outcome counts — all exported via Micrometer/Prometheus.
+ */
 @Component
 public class DecisionMetrics {
 
@@ -15,9 +18,15 @@ public class DecisionMetrics {
         this.registry = registry;
     }
 
-    public void record(DecisionOutcome outcome, LineOfBusiness line) {
+    public void recordDecision(DecisionOutcome outcome, LineOfBusiness line, String tier, double premium) {
         registry.counter("underwriting.decisions",
                 "outcome", outcome.name(),
-                "line", line.name()).increment();
+                "line", line.name(),
+                "tier", tier == null ? "NONE" : tier).increment();
+        registry.summary("underwriting.premium", "line", line.name()).record(premium);
+    }
+
+    public void recordOutcome(boolean hadClaim) {
+        registry.counter("underwriting.outcomes", "claim", String.valueOf(hadClaim)).increment();
     }
 }

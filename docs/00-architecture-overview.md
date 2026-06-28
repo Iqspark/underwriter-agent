@@ -102,6 +102,9 @@ flowchart TB
 - **Built since (Phase 4):** MCP **enrichment** — peril/crime scores via an `EnrichmentProvider`
   tool boundary (offline-first; MCP servers plug in behind it), cached and degrade-to-floor, adding
   advisory peril findings ([ADR-0026](adr/0026-mcp-enrichment.md)).
+- **Built since (Phase 7 baseline):** dashboards + flywheel — realized-outcome capture
+  (`OutcomeRecorded`), KPI columns on decisions, an embedded UW performance dashboard
+  (`GET /dashboard`) and business Micrometer metrics ([ADR-0027](adr/0027-dashboards-flywheel.md)).
 - **Designed / next:**
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
@@ -121,5 +124,5 @@ flowchart TB
 `0` overview · `1` BRD · `2` HLD · `3` API · `4` runbook · `5` learning · `6` RAG · `7` target ·
 `8` **recommended solution** · `9` multi-line · `10` runtime/audit · `11` security/PII ·
 `12` resilience/DR · `13` governance/model-risk · `14` cost · `15` testing/eval ·
-`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0026](adr/) and
+`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0027](adr/) and
 [diagrams](diagrams/).

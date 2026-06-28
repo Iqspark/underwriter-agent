@@ -47,6 +47,13 @@ public class DecisionStore {
             e.setPremiumAmount(decision.indicativePremium().amount());
             e.setPremiumCurrency(decision.indicativePremium().currency());
         }
+        if (decision.autonomy() != null) {
+            e.setTier(decision.autonomy().tier().name());
+        }
+        if (decision.learnedAssessment() != null) {
+            e.setPredictedClaimProbability(decision.learnedAssessment().claimProbability());
+            e.setExpectedLossRatio(decision.learnedAssessment().expectedLossRatio());
+        }
         e.setRationale(decision.rationale());
         e.setFindingsJson(toJson(decision.findings()));
         e.setConditionsJson(toJson(decision.conditions()));
