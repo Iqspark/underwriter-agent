@@ -1,7 +1,15 @@
 # ADR-0021: Semantic feature extraction from unstructured documents
 
-**Status:** Proposed
-**Date:** 2026-06-26
+**Status:** Accepted (advisory-first baseline built)
+**Date:** 2026-06-26 (built 2026-06-27)
+
+> **Build note (2026-06-27):** implemented in `com.iqspark.underwriter.intake` + the
+> `UnstructuredDataAgent` (order 12, gated by `underwriter.intake.semantic-features-enabled`). A
+> bounded `SemanticFeatures` record is extracted from the submission's free-text `notes` by
+> `SemanticFeatureExtractor` — LLM when a chat model is configured (strict JSON schema), else a
+> deterministic keyword heuristic. Features are carried on the context and surfaced as
+> **advisory findings** (capped severity, never a knockout). Feeding them into the k-NN/`PolicyFeatures`
+> distance is the planned next step (advisory-first now to keep the learning core stable).
 **Related:** [ADR-0020](0020-hybrid-predictive-model.md), [ADR-0006](0006-case-based-learning.md), [doc 7 §2](../07-target-architecture.md), [doc 8 §5](../08-recommended-solution.md), [doc 11](../11-security-privacy.md)
 
 ## Context

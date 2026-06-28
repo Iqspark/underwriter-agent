@@ -28,8 +28,13 @@ deferred (seams unchanged). Phase 4 MCP enrichment is built offline-first
 (`com.iqspark.underwriter.enrichment`, ADR-0026, `underwriter.enrichment.enabled`): an
 `EnrichmentProvider` tool boundary with a deterministic `OfflineEnrichmentProvider` default (MCP
 servers plug in behind it), an `EnrichmentService` (cache + degrade-to-floor), and an
-`EnrichmentAgent` (order 15) that raises advisory peril/crime findings. Three lines are wired:
-vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
+`EnrichmentAgent` (order 15) that raises advisory peril/crime findings. Phase 5 intake/drafting is
+built: an `UnstructuredDataAgent` (order 12, `com.iqspark.underwriter.intake`, ADR-0021) extracts
+bounded `SemanticFeatures` from a submission's free-text `notes` (LLM when a chat model is set, else a
+keyword heuristic) and raises advisory findings; a `DraftingService`
+(`com.iqspark.underwriter.drafting`, ADR-0028) drafts quote/conditions/broker-email/UW-memo via
+`GET /api/underwriting/decisions/{reference}/drafts` (multimodal/vision intake deferred). Three lines
+are wired: vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.
 

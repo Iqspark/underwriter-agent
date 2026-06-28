@@ -7,6 +7,7 @@ import com.iqspark.underwriter.domain.model.Money;
 import com.iqspark.underwriter.domain.model.Submission;
 import com.iqspark.underwriter.enrichment.Enrichment;
 import com.iqspark.underwriter.history.model.LearnedAssessment;
+import com.iqspark.underwriter.intake.SemanticFeatures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class UnderwritingContext {
     private Money indicativePremium;
     private List<RetrievedSource> retrievedSources = List.of();
     private Enrichment enrichment;
+    private SemanticFeatures semanticFeatures;
 
     public UnderwritingContext(Submission submission) {
         this.submission = submission;
@@ -92,6 +94,14 @@ public class UnderwritingContext {
 
     public void setEnrichment(Enrichment enrichment) {
         this.enrichment = enrichment;
+    }
+
+    public SemanticFeatures semanticFeatures() {
+        return semanticFeatures;
+    }
+
+    public void setSemanticFeatures(SemanticFeatures semanticFeatures) {
+        this.semanticFeatures = semanticFeatures;
     }
 
     public void audit(String agent, String detail) {

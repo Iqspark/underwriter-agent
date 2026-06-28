@@ -86,7 +86,7 @@ public class KeyValueDocumentExtractor implements DocumentExtractor {
                 kv.get("reference"),
                 line(kv.get("line_of_business")),
                 applicant, location, building, vacancy, protection,
-                null, null, coverage);
+                null, null, coverage, kv.get("notes"));
     }
 
     private Map<String, String> parse(String rawText) {

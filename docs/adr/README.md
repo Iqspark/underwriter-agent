@@ -32,3 +32,4 @@ Format is lightweight (after Michael Nygard). Status values: Proposed, Accepted,
 | [0025](0025-autonomy-tiers-stp.md) | Autonomy tiers / straight-through-processing routing | Accepted (built) |
 | [0026](0026-mcp-enrichment.md) | MCP enrichment (tool boundary, offline-first, degrade-to-floor) | Accepted (offline baseline built) |
 | [0027](0027-dashboards-flywheel.md) | Dashboards, business metrics & the data flywheel | Accepted (baseline built) |
+| [0028](0028-phase5-intake-drafting.md) | Phase 5 — drafting (and multimodal intake scope) | Accepted (drafting built; multimodal deferred) |

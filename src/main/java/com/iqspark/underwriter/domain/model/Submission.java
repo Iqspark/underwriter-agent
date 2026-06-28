@@ -20,7 +20,8 @@ public record Submission(
         Protection protection,
         Rental rental,
         Contents contents,
-        Money requestedCoverage
+        Money requestedCoverage,
+        String notes   // free-text inspection report / broker email for semantic feature extraction
 ) {
 
     /** The declared line, or the default ({@code VACANT_HOME}) when none is supplied. */

@@ -22,7 +22,7 @@ progresses. Status: **Built** = implemented (Phase 0); **Designed** = specified,
 | FR-1c | Area-level risk (theft/claim) → pricing & findings | [doc 5](05-ai-learning-design.md) | 0006 | Built |
 | FR-1d | Cold-start fallback when book is thin | [doc 5](05-ai-learning-design.md) | 0006 | Built |
 | FR-1e | Blend learned + guardrail (most conservative) | [doc 5 §6](05-ai-learning-design.md) | 0006, 0008 | Built |
-| FR-2 | Raw document text → extract → underwrite | [doc 3](03-api-specification.md) | 0004; 0021 (semantic feature extraction) | Built (basic extractor; LLM/OCR + semantic features designed) |
+| FR-2 | Raw document text → extract → underwrite | [doc 3](03-api-specification.md) | 0004; 0021 (semantic feature extraction); 0028 (drafting) | Built (basic extractor + semantic features advisory + drafting); LLM/OCR multimodal/vision deferred |
 | FR-3 | Flag missing fields & contradictions | [doc 2 §5](02-architecture-design.md) | 0004 | Built |
 | FR-4 | Geographic eligibility / remoteness screen (vacant-home module instance: the 100 km rule) | [doc 2 §5.2](02-architecture-design.md) | 0004 | Built |
 | FR-5 | Condition-precedent knockout (vacant-home module instance: the 72-hour inspection) | [doc 2 §5](02-architecture-design.md) | 0001 | Built |

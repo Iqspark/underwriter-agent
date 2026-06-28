@@ -120,6 +120,12 @@ underwriter:
     cache-ttl-seconds: 3600
     high-threshold: 0.7
 
+  # Phase 5 intake: semantic feature extraction from a submission's unstructured `notes`
+  # (inspection report / broker email). Uses the LLM when a chat model is configured, else a
+  # deterministic keyword heuristic. Advisory findings today; predictive-model input later (ADR-0021).
+  intake:
+    semantic-features-enabled: true
+
 # Spring AI (used only when underwriter.rag.enabled=true). Set the Anthropic key to enable the
 # grounded LLM rationale; otherwise RAG still grounds + cites offline via the template reasoner.
 # spring:

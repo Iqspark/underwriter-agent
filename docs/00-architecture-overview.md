@@ -105,6 +105,11 @@ flowchart TB
 - **Built since (Phase 7 baseline):** dashboards + flywheel — realized-outcome capture
   (`OutcomeRecorded`), KPI columns on decisions, an embedded UW performance dashboard
   (`GET /dashboard`) and business Micrometer metrics ([ADR-0027](adr/0027-dashboards-flywheel.md)).
+- **Built since (Phase 5):** semantic feature extraction — `UnstructuredDataAgent` extracts bounded
+  features from a submission's `notes` (LLM or offline heuristic), advisory-first
+  ([ADR-0021](adr/0021-semantic-feature-extraction.md)); and **drafting** — quote/conditions/broker-
+  email/UW-memo via `GET /decisions/{ref}/drafts` ([ADR-0028](adr/0028-phase5-intake-drafting.md));
+  multimodal/vision intake deferred.
 - **Designed / next:**
   enrichment → intake/drafting → evaluator/autonomy → dashboards/flywheel → hardening, per
   [doc 8 §5](08-recommended-solution.md), with the cross-cutting disciplines (security, resilience,
@@ -124,5 +129,5 @@ flowchart TB
 `0` overview · `1` BRD · `2` HLD · `3` API · `4` runbook · `5` learning · `6` RAG · `7` target ·
 `8` **recommended solution** · `9` multi-line · `10` runtime/audit · `11` security/PII ·
 `12` resilience/DR · `13` governance/model-risk · `14` cost · `15` testing/eval ·
-`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0027](adr/) and
+`16` deployment/DevOps · `17` data/integration · plus [ADRs 0001–0028](adr/) and
 [diagrams](diagrams/).

@@ -9,7 +9,7 @@ class SubmissionTest {
 
     @Test
     void effectiveLineDefaultsToVacantHomeWhenNull() {
-        Submission s = new Submission("R", null, null, null, null, null, null, null, null, null);
+        Submission s = new Submission("R", null, null, null, null, null, null, null, null, null, null);
         assertThat(s.effectiveLine()).isEqualTo(LineOfBusiness.VACANT_HOME);
     }
 
