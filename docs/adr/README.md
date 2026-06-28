@@ -30,3 +30,4 @@ Format is lightweight (after Michael Nygard). Status values: Proposed, Accepted,
 | [0023](0023-knn-scalability-ann.md) | k-NN scalability — ANN index over pgvector | Proposed |
 | [0024](0024-phase1-baseline-security.md) | Phase 1 — baseline security (dual-mode auth, RBAC, authority limits, PII redaction) | Accepted |
 | [0025](0025-autonomy-tiers-stp.md) | Autonomy tiers / straight-through-processing routing | Accepted (built) |
+| [0026](0026-mcp-enrichment.md) | MCP enrichment (tool boundary, offline-first, degrade-to-floor) | Accepted (offline baseline built) |

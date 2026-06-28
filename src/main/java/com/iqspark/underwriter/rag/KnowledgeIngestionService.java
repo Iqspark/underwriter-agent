@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Startup ETL: assembles the corpora (guidelines/wordings, policy cards, decision notes), splits
  * them, and embeds them into the {@link VectorStore} (offline ONNX embeddings). Runs only when RAG

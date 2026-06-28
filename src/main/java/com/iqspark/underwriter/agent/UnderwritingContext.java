@@ -5,6 +5,7 @@ import com.iqspark.underwriter.domain.decision.Finding;
 import com.iqspark.underwriter.domain.decision.RetrievedSource;
 import com.iqspark.underwriter.domain.model.Money;
 import com.iqspark.underwriter.domain.model.Submission;
+import com.iqspark.underwriter.enrichment.Enrichment;
 import com.iqspark.underwriter.history.model.LearnedAssessment;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class UnderwritingContext {
     private LearnedAssessment learnedAssessment;
     private Money indicativePremium;
     private List<RetrievedSource> retrievedSources = List.of();
+    private Enrichment enrichment;
 
     public UnderwritingContext(Submission submission) {
         this.submission = submission;
@@ -82,6 +84,14 @@ public class UnderwritingContext {
 
     public void setRetrievedSources(List<RetrievedSource> retrievedSources) {
         this.retrievedSources = retrievedSources == null ? List.of() : List.copyOf(retrievedSources);
+    }
+
+    public Enrichment enrichment() {
+        return enrichment;
+    }
+
+    public void setEnrichment(Enrichment enrichment) {
+        this.enrichment = enrichment;
     }
 
     public void audit(String agent, String detail) {

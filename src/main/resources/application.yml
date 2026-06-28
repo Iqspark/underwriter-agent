@@ -112,6 +112,14 @@ underwriter:
     max-attempts: 3
     outbox-poll-ms: 5000
 
+  # MCP enrichment (Phase 4). Default provider is offline/deterministic; point at MCP tool servers
+  # (geocoding, flood/wildfire/wind/crime, property) in production behind the same EnrichmentProvider
+  # seam. Unavailable enrichment degrades to book-only signals — it never fails a submission.
+  enrichment:
+    enabled: true
+    cache-ttl-seconds: 3600
+    high-threshold: 0.7
+
 # Spring AI (used only when underwriter.rag.enabled=true). Set the Anthropic key to enable the
 # grounded LLM rationale; otherwise RAG still grounds + cites offline via the template reasoner.
 # spring:

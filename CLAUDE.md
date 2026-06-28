@@ -24,7 +24,12 @@ event-driven runtime is built (`com.iqspark.underwriter.runtime`, ADR-0010): an 
 with a durable state machine, in-process after-commit `@Async` events, the outbox pattern,
 idempotency and retries→dead-letter, exposed as `POST /api/underwriting/cases` (202 + poll
 `GET /cases/{id}`); the synchronous `/submissions` fast-path is retained, and Kafka/Temporal remain
-deferred (seams unchanged). Three lines are wired: vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
+deferred (seams unchanged). Phase 4 MCP enrichment is built offline-first
+(`com.iqspark.underwriter.enrichment`, ADR-0026, `underwriter.enrichment.enabled`): an
+`EnrichmentProvider` tool boundary with a deterministic `OfflineEnrichmentProvider` default (MCP
+servers plug in behind it), an `EnrichmentService` (cache + degrade-to-floor), and an
+`EnrichmentAgent` (order 15) that raises advisory peril/crime findings. Three lines are wired:
+vacant home (reference), rental, contents. **Note the package is `com.iqspark.underwriter`** (the design docs' illustrative listings
 say `org.example` — the code is the source of truth). The environment used to scaffold this code
 could not run Maven/JDK 21, so compile and run the tests locally before relying on the build.
 
